@@ -1,14 +1,16 @@
 {
   "name": "amznon-ai",
-  "version": "1.0.0",
-  "description": "Terminal AI assistant — Claude Code style — by Md Jamil Islam",
+  "version": "2.0.0",
+  "description": "Advanced free terminal + browser coding AI by Md Jamil Islam",
   "main": "index.js",
   "bin": {
     "amznon-ai": "./index.js"
   },
   "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "setup": "node index.js --setup",
+    "web":   "node index.js --web"
   },
   "dependencies": {
     "chalk": "^5.3.0"
