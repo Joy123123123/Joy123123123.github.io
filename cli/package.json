@@ -1,6 +1,6 @@
 {
   "name": "joyai",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "JoyAI — Bangladeshi Intelligent AI. World's best free AI. Own AI (Ollama) + Groq + Gemini. Terminal + Browser + Advanced Coding. by Md Jamil Islam",
   "main": "index.js",
   "bin": {

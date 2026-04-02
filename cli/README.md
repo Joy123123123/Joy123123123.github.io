@@ -1,4 +1,4 @@
-# 🇧🇩 JoyAI v4 — Bangladeshi Intelligent AI
+# 🇧🇩 JoyAI v5 — Bangladeshi Intelligent AI
 
 **World's first free, no-setup AI assistant from Bangladesh.**
 *Built by Md Jamil Islam — beats ChatGPT, Gemini, Claude — for FREE.*
