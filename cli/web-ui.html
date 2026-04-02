@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JoyAI - Bangladeshi Intelligent AI</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a09;color:#c8c4bb;font-family:system-ui,sans-serif;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+#hdr{background:#141412;padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #232220;flex-shrink:0}
+.logo{font-size:19px;font-weight:900;color:#CC785C;letter-spacing:-.5px}.logo b{color:#98c379}
+.sub{font-size:11px;color:#4e4a43}.badge{margin-left:auto;font-size:10px;background:#98c37918;color:#98c379;border:1px solid #98c37930;padding:2px 10px;border-radius:20px;font-weight:600}
+.mode-bar{display:flex;gap:6px;padding:8px 14px;background:#141412;border-bottom:1px solid #1e1d1b;flex-shrink:0}
+.mode-btn{font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid #2a2926;background:none;color:#8a8578;cursor:pointer;transition:all .2s;font-weight:500}
+.mode-btn.active{background:#CC785C22;border-color:#CC785C66;color:#CC785C}
+#msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:90%;padding:10px 14px;border-radius:12px;font-size:13.5px;line-height:1.7;word-break:break-word}
+.user{align-self:flex-end;background:#CC785C1a;border:1px solid #CC785C40;color:#e8d5c8;border-bottom-right-radius:3px}
+.ai{align-self:flex-start;background:#141412;border:1px solid #232220;color:#c8c4bb;border-bottom-left-radius:3px}
+.ai b,.ai strong{color:#e8d5c8}
+.ai code{background:#0a0a09;padding:2px 6px;border-radius:4px;color:#c678dd;font-family:monospace;font-size:12px}
+.ai pre{background:#0a0a09;padding:12px;border-radius:8px;overflow-x:auto;border-left:3px solid #CC785C;margin:6px 0;font-size:12px;line-height:1.6;font-family:monospace}
+.ai pre code{background:none;padding:0;color:#98c379}
+.think{align-self:flex-start;color:#4e4a43;font-size:12px;padding:4px 0;font-family:monospace}
+#adv{display:none;flex:1;overflow:hidden;flex-direction:column}
+#adv.active{display:flex}
+#split{display:flex;flex:1;overflow:hidden;gap:1px;background:#1e1d1b}
+#chat-col{display:flex;flex-direction:column;flex:1;overflow:hidden;min-width:0}
+#code-col{flex:1;display:flex;flex-direction:column;background:#0a0a09;border-left:1px solid #232220;min-width:0}
+#code-hdr{display:flex;align-items:center;gap:8px;padding:6px 12px;background:#141412;border-bottom:1px solid #232220;flex-shrink:0}
+#code-hdr select{background:#0a0a09;border:1px solid #232220;color:#8a8578;font-size:11px;padding:2px 6px;border-radius:4px;outline:none}
+#code-name{font-size:12px;font-family:monospace;color:#8a8578;flex:1}
+#copy-btn{font-size:11px;background:none;border:1px solid #2a2926;color:#8a8578;padding:2px 8px;border-radius:4px;cursor:pointer;transition:all .2s}
+#copy-btn:hover{color:#98c379;border-color:#98c37950}
+#code-body{flex:1;padding:12px;overflow:auto;font-size:12px;font-family:monospace;line-height:1.7;color:#abb2bf;white-space:pre;outline:none}
+.line-num{color:#4e4a43;user-select:none;margin-right:12px;display:inline-block;min-width:24px;text-align:right}
+#setup{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;flex-direction:column;gap:14px;text-align:center}
+#setup h2{color:#CC785C;font-size:22px;font-weight:900}#setup p{color:#8a8578;font-size:13px;line-height:1.6;max-width:320px}
+.pb{display:flex;flex-direction:column;gap:3px;background:#141412;border:1px solid #232220;border-radius:10px;padding:12px 16px;cursor:pointer;width:100%;max-width:320px;text-align:left;transition:border-color .2s}
+.pb:hover,.pb.sel{border-color:#CC785C80}
+.pb.sel{background:#CC785C0a}
+.pn{font-size:14px;font-weight:700;color:#e8d5c8;display:flex;align-items:center;gap:6px}
+.ptag{font-size:10px;background:#98c37918;color:#98c379;border:1px solid #98c37930;padding:1px 7px;border-radius:10px}
+.pd{font-size:11px;color:#5e5a53;margin-top:2px}.pf{font-size:10.5px;color:#98c379;margin-top:1px}
+.kf{display:none;flex-direction:column;gap:10px;width:100%;max-width:320px}
+.kf input{background:#141412;border:1px solid #232220;border-radius:8px;padding:10px 13px;color:#e8d5c8;font-size:14px;outline:none;width:100%}
+.kf input:focus{border-color:#CC785C80}
+.kf button{background:#CC785C;border:none;border-radius:8px;padding:10px;color:#fff;font-weight:700;cursor:pointer;font-size:14px;transition:background .2s}
+.kf button:hover{background:#b8694d}
+.kf .hint{font-size:11px;color:#5e5a53;text-align:left}.kf a{color:#61afef}
+.contact-row{display:flex;align-items:center;gap:8px;font-size:11px;color:#4e4a43}
+.contact-row a{color:#61afef;text-decoration:none}.contact-row a:hover{color:#98c379}
+#btm{background:#141412;border-top:1px solid #232220;padding:9px 12px;display:flex;gap:7px;flex-shrink:0}
+textarea#inp{flex:1;background:#0a0a09;border:1px solid #232220;border-radius:8px;padding:8px 12px;color:#e8d5c8;font-size:14px;font-family:inherit;resize:none;outline:none;max-height:130px;min-height:38px;line-height:1.5}
+textarea#inp:focus{border-color:#CC785C60}
+#sendbtn{background:#CC785C;border:none;border-radius:8px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;color:#fff;transition:background .2s}
+#sendbtn:hover{background:#b8694d}
+#sendbtn:disabled{background:#232220;cursor:not-allowed}
+#sendbtn svg{width:17px;height:17px}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:#232220;border-radius:2px}
+</style>
+</head>
+<body>
+<div id="hdr">
+  <div class="logo">Joy<b>AI</b></div>
+  <div class="sub">🇧🇩 Bangladeshi Intelligent AI · by Md Jamil Islam</div>
+  <div class="badge" id="badge">Own AI</div>
+</div>
+
+<div id="setup">
+  <div style="font-size:40px">🇧🇩</div>
+  <h2>JoyAI Setup</h2>
+  <p>তোমার AI engine বেছে নাও। <strong style="color:#e8d5c8">Ollama = নিজস্ব AI</strong> — কোনো API key লাগবে না, unlimited।</p>
+  <button class="pb" onclick="pickP('ollama')" id="pb-ollama">
+    <span class="pn">🏠 Local Ollama <span class="ptag">OWN AI</span></span>
+    <span class="pd">Runs on your machine — unlimited, offline</span>
+    <span class="pf">✓ No API key · No cost · Your own data</span>
+  </button>
+  <button class="pb" onclick="pickP('groq')" id="pb-groq">
+    <span class="pn">⚡ Groq API</span>
+    <span class="pd">llama-3.3-70b — fastest cloud option</span>
+    <span class="pf">★ 14,400 req/day FREE</span>
+  </button>
+  <button class="pb" onclick="pickP('gemini')" id="pb-gemini">
+    <span class="pn">✦ Gemini API</span>
+    <span class="pd">gemini-2.0-flash — smart + capable</span>
+    <span class="pf">★ 1,500 req/day FREE</span>
+  </button>
+  <div class="kf" id="kf">
+    <div class="hint" id="kh"></div>
+    <input id="ki" type="password" placeholder="API key paste করো..." autocomplete="off">
+    <button onclick="saveK()">শুরু করো →</button>
+    <div class="hint" id="kl"></div>
+  </div>
+  <div class="contact-row">
+    <a href="mailto:joyaiofficialbd@gmail.com">joyaiofficialbd@gmail.com</a>
+    <span>·</span>
+    <a href="https://www.facebook.com/share/18Q6mnNeAr/" target="_blank" rel="noopener">Facebook</a>
+  </div>
+</div>
+
+<div class="mode-bar" id="mode-bar" style="display:none">
+  <button class="mode-btn active" id="btn-regular" onclick="setMode('regular')">💬 Regular AI</button>
+  <button class="mode-btn" id="btn-advanced" onclick="setMode('advanced')">💻 Advanced Coding</button>
+  <button class="mode-btn" style="margin-left:auto;font-size:10px;padding:3px 10px" onclick="resetSetup()">⚙ Change AI</button>
+</div>
+
+<div id="msgs" style="display:none"></div>
+
+<div id="adv">
+  <div id="split">
+    <div id="chat-col">
+      <div id="adv-msgs" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:7px"></div>
+    </div>
+    <div id="code-col">
+      <div id="code-hdr">
+        <span id="code-name">// code will appear here</span>
+        <select id="lang-sel" onchange="updateLang()">
+          <option>javascript</option><option>python</option><option>typescript</option>
+          <option>html</option><option>css</option><option>bash</option>
+          <option>java</option><option>go</option><option>rust</option><option>c</option>
+        </select>
+        <button id="copy-btn" onclick="copyCode()">Copy</button>
+      </div>
+      <div id="code-body" contenteditable="true" spellcheck="false"></div>
+    </div>
+  </div>
+</div>
+
+<div id="btm" style="display:none">
+  <textarea id="inp" rows="1" placeholder="JoyAI কে বলো… (Bangla বা English)"></textarea>
+  <button id="sendbtn" onclick="send()">
+    <svg viewBox="0 0 20 20" fill="none"><path d="M3 10L17 3l-3 14-4-5-7-2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
+<script>
+let prov='ollama',key='',hist=[],curMode='regular',curCode='',curLang='javascript';
+const SYS='You are JoyAI — the world\\'s most advanced AI assistant, built in Bangladesh by Md Jamil Islam. Reply in the SAME language as the user (Bangla or English). Write complete, working code. Format code in markdown code blocks.';
+const SYSCODE='You are JoyAI Advanced Coding — built in Bangladesh. Reply in user\\'s language. When writing code, put it in a single code block at the END of your reply. Write COMPLETE, production-quality code.';
+const fr=['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'];
+
+function pickP(p){
+  document.querySelectorAll('.pb').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('pb-'+p).classList.add('sel');
+  prov=p;
+  if(p==='ollama'){
+    document.getElementById('kf').style.display='none';
+    key='ollama';
+    saveAndStart();
+  } else {
+    const info={groq:['Get free key: console.groq.com','https://console.groq.com'],gemini:['Get free key: aistudio.google.com','https://aistudio.google.com']};
+    document.getElementById('kh').textContent=info[p][0];
+    document.getElementById('kl').innerHTML='<a href="'+info[p][1]+'" target="_blank">'+info[p][1]+'</a>';
+    document.getElementById('kf').style.display='flex';
+    document.getElementById('ki').focus();
+  }
+}
+
+function saveK(){
+  const k=document.getElementById('ki').value.trim();
+  if(!k){alert('API key দাও');return;}
+  key=k;
+  saveAndStart();
+}
+
+function saveAndStart(){
+  localStorage.setItem('joyai_p',prov);
+  localStorage.setItem('joyai_k',key);
+  document.getElementById('badge').textContent='🇧🇩 '+prov;
+  startChat();
+}
+
+function startChat(){
+  document.getElementById('setup').style.display='none';
+  document.getElementById('mode-bar').style.display='flex';
+  document.getElementById('msgs').style.display='flex';
+  document.getElementById('btm').style.display='flex';
+  setMode('regular');
+  addMsg('ai','আমি **JoyAI** 🇧🇩 — Bangladesh থেকে তৈরি। Bangla বা English যেকোনো ভাষায় কথা বলো।\n\n💬 **Regular Mode**: যেকোনো প্রশ্ন, coding help, explanation\n💻 **Advanced Mode**: Code লেখা, edit, copy — side-by-side editor সহ','msgs');
+}
+
+function setMode(m){
+  curMode=m;
+  document.getElementById('btn-regular').classList.toggle('active',m==='regular');
+  document.getElementById('btn-advanced').classList.toggle('active',m==='advanced');
+  document.getElementById('msgs').style.display=m==='regular'?'flex':'none';
+  document.getElementById('adv').classList.toggle('active',m==='advanced');
+  document.getElementById('inp').placeholder=m==='advanced'?'Code লিখতে বলো… (জিজ্ঞেস করো)':'JoyAI কে বলো… (Bangla বা English)';
+}
+
+function render(text){
+  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/```(\w*)\n?([\s\S]*?)```/g,(_,lang,code)=>{
+      if(curMode==='advanced'){curCode=code.trim();curLang=lang||'javascript';updateEditor();}
+      return '<pre><code>'+code.trim()+'</code></pre>';
+    })
+    .replace(/`([^`\n]+)`/g,(_,c)=>'<code>'+c+'</code>')
+    .replace(/\*\*([^*]+)\*\*/g,(_,t)=>'<strong>'+t+'</strong>')
+    .replace(/\n/g,'<br>');
+}
+
+function addMsg(role,text,containerId){
+  const c=containerId||'msgs';
+  const el=document.getElementById(c==='msgs'?'msgs':'adv-msgs');
+  const d=document.createElement('div');
+  d.className='msg '+(role==='user'?'user':'ai');
+  if(role==='ai'){d.innerHTML=render(text);}else{d.textContent=text;}
+  el.appendChild(d);
+  el.scrollTop=el.scrollHeight;
+  return d;
+}
+
+function updateEditor(){
+  document.getElementById('code-name').textContent='code.'+curLang;
+  document.getElementById('lang-sel').value=curLang;
+  const lines=curCode.split('\n').map((l,i)=>'<span class=\\"line-num\\">'+(i+1)+'</span>'+escHtml(l)).join('\n');
+  document.getElementById('code-body').innerHTML=lines;
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function updateLang(){
+  curLang=document.getElementById('lang-sel').value;
+  document.getElementById('code-name').textContent='code.'+curLang;
+}
+
+async function copyCode(){
+  const btn=document.getElementById('copy-btn');
+  await navigator.clipboard.writeText(curCode||document.getElementById('code-body').innerText||'').catch(()=>{});
+  btn.textContent='Copied!';btn.style.color='#98c379';
+  setTimeout(()=>{btn.textContent='Copy';btn.style.color='';},1500);
+}
+
+async function send(){
+  const inp=document.getElementById('inp'),btn=document.getElementById('sendbtn');
+  const text=inp.value.trim();
+  if(!text)return;
+  inp.value='';inp.style.height='auto';btn.disabled=true;
+  const msgsId=curMode==='regular'?'msgs':'adv-msgs';
+  addMsg('user',text,msgsId);
+  hist.push({role:'user',content:text});
+  if(hist.length>30)hist=hist.slice(-30);
+
+  const t=document.createElement('div');
+  t.className='think';t.textContent='⠋ ভাবছি…';
+  document.getElementById(curMode==='regular'?'msgs':'adv-msgs').appendChild(t);
+  let fi=0;const sp=setInterval(()=>{t.textContent=fr[fi++%10]+' ভাবছি…';},80);
+
+  try{
+    let reply='';
+    const sys=curMode==='advanced'?SYSCODE:SYS;
+    const messages=[{role:'system',content:sys},...hist];
+
+    if(prov==='ollama'){
+      // Use our local proxy
+      const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages})});
+      const d=await r.json();
+      reply=d.reply||d.error||'No response';
+    } else {
+      const url=prov==='groq'?'https://api.groq.com/openai/v1/chat/completions':'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions';
+      const model=prov==='groq'?'llama-3.3-70b-versatile':'gemini-2.0-flash';
+      const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model,messages,max_tokens:8192})});
+      const d=await r.json();
+      reply=d.choices?.[0]?.message?.content||d.error?.message||'No response';
+    }
+
+    clearInterval(sp);t.remove();
+    hist.push({role:'assistant',content:reply});
+    addMsg('ai',reply,msgsId);
+    if(curMode==='advanced'&&curCode){updateEditor();}
+  }catch(e){
+    clearInterval(sp);t.remove();
+    addMsg('ai','✗ Error: '+e.message,msgsId);
+  }
+  btn.disabled=false;
+}
+
+function resetSetup(){
+  localStorage.removeItem('joyai_p');localStorage.removeItem('joyai_k');
+  prov='ollama';key='';hist=[];
+  document.getElementById('setup').style.display='flex';
+  document.getElementById('mode-bar').style.display='none';
+  document.getElementById('msgs').style.display='none';
+  document.getElementById('adv').classList.remove('active');
+  document.getElementById('btm').style.display='none';
+  document.getElementById('msgs').innerHTML='';
+  document.getElementById('adv-msgs').innerHTML='';
+  document.querySelectorAll('.pb').forEach(b=>b.classList.remove('sel'));
+  document.getElementById('kf').style.display='none';
+  document.getElementById('ki').value='';
+}
+
+document.getElementById('sendbtn').addEventListener('click',send);
+document.getElementById('inp').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}
+  setTimeout(()=>{const el=document.getElementById('inp');el.style.height='auto';el.style.height=Math.min(el.scrollHeight,130)+'px';},0);
+});
+
+// Auto-restore
+const sp=localStorage.getItem('joyai_p'),sk=localStorage.getItem('joyai_k');
+if(sp&&sk){prov=sp;key=sk;document.getElementById('badge').textContent='🇧🇩 '+sp;startChat();}
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "joyai",
+  "version": "5.0.0",
+  "description": "JoyAI — Bangladeshi Intelligent AI. World's best free AI. Own AI (Ollama) + Groq + Gemini. Terminal + Browser + Advanced Coding. by Md Jamil Islam",
+  "main": "index.js",
+  "bin": {
+    "joyai": "./index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "start":    "node index.js",
+    "setup":    "node index.js --setup",
+    "web":      "node index.js --web",
+    "advanced": "node index.js --advanced"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["ai", "bangladesh", "coding", "cli", "groq", "gemini", "ollama", "free", "joyai", "advanced-coding"],
+  "author": "Md Jamil Islam <joyaiofficialbd@gmail.com>",
+  "homepage": "https://www.facebook.com/share/18Q6mnNeAr/",
+  "license": "MIT"
+}
