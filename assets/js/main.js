@@ -1,104 +1,121 @@
 /* =====================================================
-   amznon.me — Main JavaScript
+   amznon.me — Claude-Code-inspired JS
    ===================================================== */
 
-// ── Navbar scroll effect ────────────────────────────
-const navbar = document.getElementById('navbar');
+// ── Panel navigation ─────────────────────────────────
+const navItems   = document.querySelectorAll('.nav-item');
+const panels     = document.querySelectorAll('.panel');
+const panelTitle = document.getElementById('panel-title');
 
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 20) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
+function switchPanel(id) {
+  panels.forEach(p   => p.classList.toggle('active', p.id === `panel-${id}`));
+  navItems.forEach(n => n.classList.toggle('active', n.dataset.panel === id));
+  if (panelTitle) {
+    panelTitle.textContent = id.charAt(0).toUpperCase() + id.slice(1);
   }
-}, { passive: true });
+  // trigger counters when about panel shown
+  if (id === 'about') startCounters();
+}
 
-// ── Mobile nav toggle ───────────────────────────────
-const navToggle = document.getElementById('nav-toggle');
-const navLinks  = document.getElementById('nav-links');
-
-navToggle.addEventListener('click', () => {
-  navLinks.classList.toggle('open');
-  const isOpen = navLinks.classList.contains('open');
-  document.body.style.overflow = isOpen ? 'hidden' : '';
-});
-
-navLinks.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    navLinks.classList.remove('open');
-    document.body.style.overflow = '';
+navItems.forEach(btn => {
+  btn.addEventListener('click', () => {
+    switchPanel(btn.dataset.panel);
+    closeSidebar();
   });
 });
 
-// ── Active nav link on scroll ────────────────────────
-const sections = document.querySelectorAll('section[id]');
+// prompt-bar shortcut buttons
+document.querySelectorAll('.prompt-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchPanel(btn.dataset.panel));
+});
 
-function updateActiveLink() {
-  const scrollY = window.scrollY + 120;
-  sections.forEach(section => {
-    const top    = section.offsetTop;
-    const height = section.offsetHeight;
-    const id     = section.getAttribute('id');
-    const link   = document.querySelector(`.navbar__links a[href="#${id}"]`);
-    if (!link) return;
-    if (scrollY >= top && scrollY < top + height) {
-      link.classList.add('active');
+// ── Sidebar mobile toggle ─────────────────────────────
+const sidebar        = document.getElementById('sidebar');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+const sidebarToggle  = document.getElementById('sidebar-toggle');
+
+function openSidebar()  {
+  sidebar.classList.add('open');
+  sidebarOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSidebar() {
+  sidebar.classList.remove('open');
+  sidebarOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+if (sidebarToggle)  sidebarToggle.addEventListener('click', openSidebar);
+if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
+
+// ── Typing animation (home panel) ─────────────────────
+const typedEl = document.getElementById('typed-text');
+
+const messages = [
+  "Here's a quick summary of what I can do for you:",
+  "I build full-stack web apps, APIs, and dev tools.",
+  "Check out the panels on the left to learn more ↙"
+];
+
+let msgIdx = 0;
+
+function typeMessage(text, onDone) {
+  typedEl.innerHTML = '';
+  let i = 0;
+  const cursor = document.createElement('span');
+  cursor.className = 'cursor';
+  cursor.textContent = '▋';
+  cursor.style.cssText = 'color:var(--orange);animation:blink-cursor .8s step-end infinite';
+
+  function tick() {
+    if (i < text.length) {
+      typedEl.textContent = text.slice(0, ++i);
+      typedEl.appendChild(cursor);
+      setTimeout(tick, 28 + Math.random() * 20);
     } else {
-      link.classList.remove('active');
+      setTimeout(() => {
+        cursor.remove();
+        if (onDone) onDone();
+      }, 600);
     }
-  });
-}
-
-window.addEventListener('scroll', updateActiveLink, { passive: true });
-
-// ── Scroll reveal ────────────────────────────────────
-const revealElements = document.querySelectorAll('[data-reveal]');
-
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('revealed');
-      revealObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.15 });
-
-revealElements.forEach(el => revealObserver.observe(el));
-
-// ── Animated counters ────────────────────────────────
-function animateCounter(el) {
-  const target   = parseInt(el.dataset.count, 10);
-  const duration = 1500;
-  const start    = performance.now();
-
-  function step(now) {
-    const elapsed  = now - start;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased    = 1 - Math.pow(1 - progress, 3); // ease-out cubic
-    el.textContent = Math.round(eased * target);
-    if (progress < 1) requestAnimationFrame(step);
   }
-
-  requestAnimationFrame(step);
+  tick();
 }
 
-const counterObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      animateCounter(entry.target);
-      counterObserver.unobserve(entry.target);
+// inject cursor blink keyframe once
+const styleEl = document.createElement('style');
+styleEl.textContent = '@keyframes blink-cursor{0%,100%{opacity:1}50%{opacity:0}}';
+document.head.appendChild(styleEl);
+
+// start after a short delay
+setTimeout(() => {
+  function nextMessage() {
+    if (msgIdx < messages.length) {
+      typeMessage(messages[msgIdx++], () => setTimeout(nextMessage, 400));
     }
+  }
+  nextMessage();
+}, 900);
+
+// ── Animated counters ─────────────────────────────────
+let countersStarted = false;
+
+function startCounters() {
+  if (countersStarted) return;
+  countersStarted = true;
+
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const target   = parseInt(el.dataset.count, 10);
+    const duration = 1200;
+    const start    = performance.now();
+
+    function step(now) {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(ease * target);
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
   });
-}, { threshold: 0.5 });
-
-document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
-
-// ── Set current year ─────────────────────────────────
-const yearEl = document.getElementById('year');
-if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-// ── Add data-reveal to key sections ──────────────────
-document.querySelectorAll('.skill-card, .project-card, .about__card').forEach(el => {
-  el.setAttribute('data-reveal', '');
-  revealObserver.observe(el);
-});
+}
