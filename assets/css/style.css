@@ -668,3 +668,366 @@ body {
   .prompt-actions { display: none; }
   .stat-pill { min-width: 80px; }
 }
+
+/* ════════════════════════════════════════════════════
+   JoyAI — Bangladeshi Intelligent AI panel
+   ════════════════════════════════════════════════════ */
+
+/* Nav badge */
+.nav-item--joyai .nav-badge {
+  font-size: .65rem;
+  margin-left: .15rem;
+  vertical-align: middle;
+}
+
+.nav-item--joyai.active {
+  background: rgba(40,167,69,.10);
+  color: #98c379;
+  border-right-color: #98c379;
+}
+
+/* JoyAI logo text */
+.joyai-logo {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--orange);
+  letter-spacing: -.5px;
+}
+
+.joyai-logo span { color: #98c379; }
+
+.joyai-logo--sm {
+  font-size: .95rem;
+}
+
+/* Panel wrapper */
+.joyai-wrap {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── SETUP ── */
+.joyai-setup {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  gap: 1rem;
+  text-align: center;
+  overflow-y: auto;
+}
+
+.joyai-setup__logo {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+
+.joyai-setup__flag {
+  font-size: 1.6rem;
+}
+
+.joyai-setup__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--txt-0);
+}
+
+.joyai-setup__sub {
+  font-size: .85rem;
+  color: var(--txt-2);
+  max-width: 320px;
+  line-height: 1.6;
+}
+
+.joyai-prov-list {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  width: 100%;
+  max-width: 340px;
+}
+
+.joyai-prov-btn {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .9rem 1.1rem;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.joyai-prov-btn:hover,
+.joyai-prov-btn.selected {
+  border-color: rgba(40,167,69,.5);
+  background: var(--bg-3);
+}
+
+.joyai-prov-btn__top {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.joyai-prov-btn__name {
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--txt-0);
+}
+
+.joyai-prov-btn__tag {
+  font-size: .68rem;
+  padding: .1rem .45rem;
+  background: rgba(40,167,69,.15);
+  border: 1px solid rgba(40,167,69,.3);
+  border-radius: 10px;
+  color: #98c379;
+}
+
+.joyai-prov-btn__desc { font-size: .78rem; color: var(--txt-2); }
+.joyai-prov-btn__free { font-size: .72rem; color: #98c379; }
+
+.joyai-key-form {
+  display: none;
+  flex-direction: column;
+  gap: .65rem;
+  width: 100%;
+  max-width: 340px;
+}
+
+.joyai-key-form__hint {
+  font-size: .78rem;
+  color: var(--txt-2);
+  text-align: left;
+}
+
+.joyai-key-form__input {
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius);
+  padding: .65rem .9rem;
+  color: var(--txt-0);
+  font-size: .9rem;
+  font-family: var(--font-mono);
+  outline: none;
+  width: 100%;
+  transition: border-color var(--transition);
+}
+
+.joyai-key-form__input:focus {
+  border-color: rgba(40,167,69,.6);
+}
+
+.joyai-key-form__btn {
+  background: #28a745;
+  border: none;
+  border-radius: var(--radius);
+  padding: .65rem;
+  color: #fff;
+  font-weight: 700;
+  font-size: .9rem;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.joyai-key-form__btn:hover { background: #22923c; }
+
+.joyai-key-form__link {
+  font-size: .75rem;
+  color: var(--txt-3);
+  text-align: left;
+}
+
+.joyai-key-form__link a {
+  color: #61afef;
+  text-decoration: none;
+}
+
+/* ── CHAT ── */
+.joyai-chat {
+  flex: 1;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+.joyai-chat.active {
+  display: flex;
+}
+
+.joyai-chat__header {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .7rem 1rem;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg-1);
+}
+
+.joyai-chat__header-sub {
+  font-size: .72rem;
+  color: var(--txt-2);
+  margin-left: .25rem;
+}
+
+.joyai-chat__reset {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--txt-3);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: .2rem .4rem;
+  border-radius: 4px;
+  transition: color var(--transition), background var(--transition);
+}
+
+.joyai-chat__reset:hover {
+  color: var(--txt-0);
+  background: var(--bg-3);
+}
+
+/* Messages */
+.joyai-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.joyai-msg {
+  max-width: 88%;
+  padding: .75rem 1rem;
+  border-radius: 12px;
+  font-size: .875rem;
+  line-height: 1.7;
+  word-break: break-word;
+  animation: fadeUp .25s ease;
+}
+
+.joyai-msg--user {
+  align-self: flex-end;
+  background: var(--orange-bg);
+  border: 1px solid var(--orange-bd);
+  color: #e8d5c8;
+  border-bottom-right-radius: 3px;
+}
+
+.joyai-msg--ai {
+  align-self: flex-start;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  color: var(--txt-1);
+  border-bottom-left-radius: 3px;
+}
+
+.joyai-msg--ai strong { color: var(--txt-0); }
+
+.joyai-msg--ai code {
+  background: var(--bg-0);
+  padding: .1rem .4rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: .8rem;
+  color: var(--code);
+}
+
+.joyai-msg--ai pre {
+  background: var(--bg-0);
+  padding: .8rem 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  border-left: 3px solid var(--orange);
+  margin: .5rem 0;
+  font-size: .8rem;
+  line-height: 1.6;
+  font-family: var(--font-mono);
+}
+
+.joyai-msg--ai pre code {
+  background: none;
+  padding: 0;
+  color: #98c379;
+}
+
+.joyai-msg--think {
+  align-self: flex-start;
+  color: var(--txt-3);
+  font-size: .78rem;
+  padding: .4rem 0;
+  font-family: var(--font-mono);
+  background: none;
+  border: none;
+}
+
+/* Input bar */
+.joyai-input-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: .5rem;
+  padding: .75rem 1rem;
+  border-top: 1px solid var(--border);
+  background: var(--bg-1);
+  flex-shrink: 0;
+}
+
+.joyai-textarea {
+  flex: 1;
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius);
+  padding: .6rem .85rem;
+  color: var(--txt-0);
+  font-size: .875rem;
+  font-family: var(--font-sans);
+  resize: none;
+  outline: none;
+  max-height: 150px;
+  min-height: 40px;
+  line-height: 1.5;
+  transition: border-color var(--transition);
+}
+
+.joyai-textarea:focus {
+  border-color: rgba(40,167,69,.5);
+}
+
+.joyai-send-btn {
+  background: #28a745;
+  border: none;
+  border-radius: var(--radius);
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--transition), transform var(--transition);
+  color: white;
+}
+
+.joyai-send-btn:hover { background: #22923c; transform: scale(1.05); }
+.joyai-send-btn:disabled { background: var(--bg-3); cursor: not-allowed; transform: none; }
+.joyai-send-btn svg { width: 18px; height: 18px; }
+
+/* Responsive */
+@media (max-width: 720px) {
+  .joyai-setup { padding: 1.25rem 1rem; }
+  .joyai-messages { padding: .75rem; }
+  .joyai-input-bar { padding: .65rem .75rem; }
+}

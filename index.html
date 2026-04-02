@@ -46,6 +46,10 @@
           <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 7l8 5 8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           <span>Contact</span>
         </button>
+        <button class="nav-item nav-item--joyai" data-panel="joyai">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a6 6 0 014.9 9.4L17 14H3l2.1-2.6A6 6 0 0110 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7 14v1a3 3 0 006 0v-1" stroke="currentColor" stroke-width="1.5"/></svg>
+          <span>JoyAI <span class="nav-badge">🇧🇩</span></span>
+        </button>
       </nav>
 
       <div class="sidebar__footer">
@@ -315,6 +319,67 @@
               <span class="t-prompt">~</span> <span class="t-cmd">curl</span> <span class="t-arg">-X POST amznon.me/contact</span><br/>
               <span class="t-comment"># Or just send an email 🙂</span><br/>
               <span class="t-ok">{"status": "available", "response_time": "&lt;24h"}</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+      <!-- ── JOYAI panel ─────────────────────────── -->
+      <section class="panel" id="panel-joyai">
+        <div class="joyai-wrap">
+
+          <!-- Setup screen (shown if no key saved) -->
+          <div class="joyai-setup" id="joyai-setup">
+            <div class="joyai-setup__logo">
+              <span class="joyai-logo">Joy<span>AI</span></span>
+              <div class="joyai-setup__flag">🇧🇩</div>
+            </div>
+            <h2 class="joyai-setup__title">Bangladeshi Intelligent AI</h2>
+            <p class="joyai-setup__sub">একটা free AI provider বেছে নাও। কোনো credit card লাগবে না।</p>
+
+            <div class="joyai-prov-list" id="joyai-prov-list">
+              <button class="joyai-prov-btn" data-prov="groq">
+                <div class="joyai-prov-btn__top">
+                  <span class="joyai-prov-btn__name">⚡ Groq</span>
+                  <span class="joyai-prov-btn__tag">Recommended</span>
+                </div>
+                <div class="joyai-prov-btn__desc">llama-3.3-70b-versatile · fastest</div>
+                <div class="joyai-prov-btn__free">★ দিনে 14,400 request FREE</div>
+              </button>
+              <button class="joyai-prov-btn" data-prov="gemini">
+                <div class="joyai-prov-btn__top">
+                  <span class="joyai-prov-btn__name">✦ Gemini</span>
+                  <span class="joyai-prov-btn__tag">Google</span>
+                </div>
+                <div class="joyai-prov-btn__desc">gemini-1.5-flash · smart</div>
+                <div class="joyai-prov-btn__free">★ দিনে 1,500 request FREE</div>
+              </button>
+            </div>
+
+            <div class="joyai-key-form" id="joyai-key-form">
+              <div class="joyai-key-form__hint" id="joyai-key-hint"></div>
+              <input class="joyai-key-form__input" id="joyai-key-input" type="password" placeholder="API key paste করো..." autocomplete="off" />
+              <button class="joyai-key-form__btn" id="joyai-key-save">শুরু করো →</button>
+              <div class="joyai-key-form__link" id="joyai-key-link"></div>
+            </div>
+          </div>
+
+          <!-- Chat screen -->
+          <div class="joyai-chat" id="joyai-chat">
+            <div class="joyai-chat__header">
+              <span class="joyai-logo joyai-logo--sm">Joy<span>AI</span></span>
+              <span class="joyai-chat__header-sub" id="joyai-prov-label"></span>
+              <button class="joyai-chat__reset" id="joyai-reset" title="Change provider">⚙</button>
+            </div>
+            <div class="joyai-messages" id="joyai-messages"></div>
+            <div class="joyai-input-bar">
+              <textarea class="joyai-textarea" id="joyai-inp" rows="1" placeholder="Bangla বা English-এ জিজ্ঞেস করো…"></textarea>
+              <button class="joyai-send-btn" id="joyai-send">
+                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 10L17 3l-3 14-4-5-7-2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+              </button>
             </div>
           </div>
 

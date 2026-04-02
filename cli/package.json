@@ -1,10 +1,10 @@
 {
-  "name": "amznon-ai",
-  "version": "2.0.0",
-  "description": "Advanced free terminal + browser coding AI by Md Jamil Islam",
+  "name": "joyai",
+  "version": "3.0.0",
+  "description": "JoyAI — Bangladeshi Intelligent AI. Free coding assistant. Terminal + Browser. by Md Jamil Islam",
   "main": "index.js",
   "bin": {
-    "amznon-ai": "./index.js"
+    "joyai": "./index.js"
   },
   "type": "module",
   "scripts": {
@@ -18,5 +18,7 @@
   "engines": {
     "node": ">=18"
   },
+  "keywords": ["ai", "bangladesh", "coding", "cli", "groq", "gemini", "ollama", "free"],
+  "author": "Md Jamil Islam",
   "license": "MIT"
 }
