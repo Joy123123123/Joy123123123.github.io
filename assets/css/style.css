@@ -1199,3 +1199,29 @@ body {
   .joyai-adv-chat { border-right: none; border-bottom: 1px solid var(--border-1); max-height: 45%; }
   .joyai-code-pane { max-height: 55%; }
 }
+
+/* ── JoyAI v4.1 — Pollinations instant-free button ─── */
+.joyai-prov-btn--instant {
+  border-color: rgba(204,120,92,.35);
+  background: rgba(204,120,92,.06);
+}
+.joyai-prov-btn--instant:hover,
+.joyai-prov-btn--instant.selected {
+  border-color: rgba(204,120,92,.8);
+  background: rgba(204,120,92,.1);
+}
+.joyai-prov-btn__tag--instant {
+  background: rgba(204,120,92,.18);
+  color: var(--orange);
+  border-color: rgba(204,120,92,.4);
+}
+/* Think/typing indicator */
+.joyai-msg--think {
+  align-self: flex-start;
+  color: var(--txt-3);
+  font-size: .8rem;
+  padding: .4rem 0;
+  font-family: var(--font-mono);
+  background: none;
+  border: none;
+}

@@ -244,7 +244,7 @@
                 <div class="project-item__icon">🇧🇩</div>
                 <div>
                   <div class="project-item__name">JoyAI — Bangladeshi Intelligent AI <span class="tag tag--sm" style="background:rgba(204,120,92,.12);color:#CC785C;border-color:rgba(204,120,92,.4)">v4</span></div>
-                  <div class="project-item__desc">World-class AI assistant built in Bangladesh. Two modes: Regular AI + Advanced Coding IDE. Supports local Ollama (own AI, unlimited), Groq, Gemini. Terminal + Browser.</div>
+                  <div class="project-item__desc">World-class AI assistant built in Bangladesh. Two modes: Regular AI + Advanced Coding IDE. Works instantly for all visitors (Pollinations — no setup). Also supports Ollama (own AI), Groq, Gemini. Terminal + Browser.</div>
                   <div class="project-item__tags">
                     <span class="tag tag--sm">Bangladesh 🇧🇩</span><span class="tag tag--sm">Ollama</span><span class="tag tag--sm">Node.js</span><span class="tag tag--sm">AI</span><span class="tag tag--sm">Free</span>
                   </div>
@@ -341,35 +341,43 @@
       <section class="panel" id="panel-joyai">
         <div class="joyai-wrap">
 
-          <!-- Setup screen -->
+          <!-- Setup screen (only shown when user clicks ⚙ Change AI) -->
           <div class="joyai-setup" id="joyai-setup">
             <div class="joyai-setup__logo">
               <span class="joyai-logo">Joy<span>AI</span></span>
               <div class="joyai-setup__flag">🇧🇩</div>
             </div>
-            <h2 class="joyai-setup__title">Bangladeshi Intelligent AI</h2>
-            <p class="joyai-setup__sub">AI engine বেছে নাও। <strong>Ollama = নিজস্ব AI</strong> — unlimited, offline।</p>
+            <h2 class="joyai-setup__title">AI Engine বেছে নাও</h2>
+            <p class="joyai-setup__sub">JoyAI সব সময় **একদম FREE**। কোনো credit card লাগবে না।</p>
 
             <div class="joyai-prov-list" id="joyai-prov-list">
+              <button class="joyai-prov-btn joyai-prov-btn--instant" data-prov="pollinations">
+                <div class="joyai-prov-btn__top">
+                  <span class="joyai-prov-btn__name">🚀 Instant Free</span>
+                  <span class="joyai-prov-btn__tag joyai-prov-btn__tag--instant">NO SETUP</span>
+                </div>
+                <div class="joyai-prov-btn__desc">Pollinations AI — এখনই শুরু করো, কোনো key লাগবে না</div>
+                <div class="joyai-prov-btn__free">✓ সম্পূর্ণ বিনামূল্যে · সবার জন্য · ২৪/৭ চালু</div>
+              </button>
               <button class="joyai-prov-btn joyai-prov-btn--own" data-prov="ollama">
                 <div class="joyai-prov-btn__top">
                   <span class="joyai-prov-btn__name">🏠 Local Ollama</span>
-                  <span class="joyai-prov-btn__tag joyai-prov-btn__tag--own">OWN AI</span>
+                  <span class="joyai-prov-btn__tag joyai-prov-btn__tag--own">নিজস্ব AI</span>
                 </div>
-                <div class="joyai-prov-btn__desc">Runs on your machine — no API key needed</div>
-                <div class="joyai-prov-btn__free">✓ Unlimited · Offline · Your own data</div>
+                <div class="joyai-prov-btn__desc">তোমার মেশিনে চলে — unlimited, offline</div>
+                <div class="joyai-prov-btn__free">✓ No API key · No cost · তোমার data তোমার কাছে</div>
               </button>
               <button class="joyai-prov-btn" data-prov="groq">
                 <div class="joyai-prov-btn__top">
-                  <span class="joyai-prov-btn__name">⚡ Groq</span>
-                  <span class="joyai-prov-btn__tag">Cloud Free</span>
+                  <span class="joyai-prov-btn__name">⚡ Groq API</span>
+                  <span class="joyai-prov-btn__tag">সবচেয়ে দ্রুত</span>
                 </div>
                 <div class="joyai-prov-btn__desc">llama-3.3-70b · fastest cloud option</div>
                 <div class="joyai-prov-btn__free">★ দিনে 14,400 request FREE</div>
               </button>
               <button class="joyai-prov-btn" data-prov="gemini">
                 <div class="joyai-prov-btn__top">
-                  <span class="joyai-prov-btn__name">✦ Gemini</span>
+                  <span class="joyai-prov-btn__name">✦ Gemini API</span>
                   <span class="joyai-prov-btn__tag">Google</span>
                 </div>
                 <div class="joyai-prov-btn__desc">gemini-2.0-flash · smart + capable</div>

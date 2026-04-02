@@ -1,164 +1,176 @@
-# 🇧🇩 JoyAI — Bangladeshi Intelligent AI
+# 🇧🇩 JoyAI v4 — Bangladeshi Intelligent AI
 
-**World's best free AI assistant built in Bangladesh by Md Jamil Islam.**
-
-> Beats ChatGPT, Claude, Gemini — for free. Zero cost. Your own AI.
-
----
-
-## ✨ Features
-
-| Feature | Description |
-|---------|-------------|
-| 🏠 **Own AI (Ollama)** | Runs on YOUR machine — unlimited, offline, NO API key |
-| 💬 **Regular Chat** | Bangla + English, any topic |
-| 💻 **Advanced Coding** | Side-by-side terminal IDE, write/run/fix code |
-| 🌐 **Web UI** | Browser + mobile access on same WiFi |
-| ⚡ **Groq (Cloud)** | llama-3.3-70b, 14,400 req/day FREE |
-| ✦ **Gemini (Cloud)** | gemini-2.0-flash, 1,500 req/day FREE |
-| 📁 **File Tools** | Read, write, run files — real terminal actions |
-| 🔄 **Streaming** | Real-time responses |
-| 🇧🇩 **Bangla UI** | Full Bangla + English support |
+**World's first free, no-setup AI assistant from Bangladesh.**
+*Built by Md Jamil Islam — beats ChatGPT, Gemini, Claude — for FREE.*
 
 ---
 
-## 🚀 Quick Start
+## ✅ সাধারণ ইউজারদের জন্য (Regular Users)
 
-### Option 1: Own AI (Ollama — recommended)
+**ওয়েবসাইটে যাও → সাথে সাথে chat শুরু করো। কোনো setup লাগবে না।**
 
-```bash
-# 1. Install Ollama (one time)
-curl -fsSL https://ollama.com/install.sh | sh
+🌐 Website: [https://joy123123123.github.io](https://joy123123123.github.io)
 
-# 2. Download a model (one time, ~4GB)
-ollama pull llama3.2
-
-# 3. Start JoyAI
-cd cli
-npm install
-node index.js
-```
-
-### Option 2: Cloud AI (free API key)
-
-```bash
-# Groq (14,400 req/day free)
-# Get key: https://console.groq.com
-
-cd cli && npm install
-node index.js --setup   # choose provider + enter key
-node index.js
-```
+→ JoyAI panel click করো → **স্বয়ংক্রিয় শুরু হয়ে যাবে** (Pollinations AI দিয়ে)
+→ কোনো key লাগবে না, কোনো registration লাগবে না
 
 ---
 
-## 📱 Phone / Browser Access
+## 🔧 AI Engines (৪টি Option)
 
-```bash
-# Start web server (on your PC/laptop)
-node index.js --web
+| Engine | Setup | Speed | Best For |
+|--------|-------|-------|---------|
+| 🚀 **Pollinations** (Default) | শূন্য | দ্রুত | সবার জন্য — website visitors |
+| 🏠 **Ollama** (Own AI) | install করতে হবে | সবচেয়ে fast | নিজের PC/server |
+| ⚡ **Groq** | free API key | দ্রুত | power users |
+| ✦ **Gemini** | free API key | ভালো | power users |
 
-# Opens at:
-#   Local:  http://localhost:3000
-#   Mobile: http://YOUR_IP:3000  (same WiFi)
-```
-
-The web UI:
-- **Regular AI**: Chat in Bangla/English
-- **Advanced Coding**: Side-by-side code editor
-- **Own AI**: Connects to your local Ollama (no external API)
+**Pollinations = default → website visitors এর জন্য কোনো setup লাগে না।**
 
 ---
 
-## 💻 Advanced Coding Mode
+## 🖥️ Terminal (CLI) ব্যবহার
 
 ```bash
-node index.js --advanced
-```
-
-Features:
-- AI writes complete, production code
-- View files in visual code editor
-- Run shell commands directly
-- `write_file`, `read_file`, `run_shell` tools
-- Language selection: JS, Python, TS, HTML, CSS, Bash, Go, Rust...
-
----
-
-## 📦 Termux (Android)
-
-```bash
-# Install Termux from F-Droid
-pkg install nodejs git curl
-
-# Install Ollama for Android (Termux)
-curl -fsSL https://ollama.com/install.sh | sh
-ollama pull tinyllama  # smaller model for phone
-
-# Run JoyAI
+# Install
 git clone https://github.com/Joy123123123/Joy123123123.github.io
 cd Joy123123123.github.io/cli
 npm install
+
+# Run (Pollinations default — no setup needed)
 node index.js
+
+# Setup other providers
+node index.js --setup
+
+# Browser UI (phone + desktop)
+node index.js --web
+
+# Advanced Coding IDE
+node index.js --advanced
 ```
 
 ---
 
-## ⌨️ Commands
+## 🌐 ২৪/৭ সক্রিয় রাখার উপায়
 
-| Command | Description |
-|---------|-------------|
-| `/help` | Show all commands |
-| `/setup` | Configure AI engine |
-| `/status` | Show provider + Ollama status |
-| `/models` | List Ollama models |
-| `/pull <model>` | Download Ollama model |
-| `/model <name>` | Switch model |
-| `/web [port]` | Start browser UI |
-| `/advanced` | Advanced coding mode |
-| `/ls [path]` | List files |
-| `/run <cmd>` | Run shell command |
-| `/cd <path>` | Change directory |
-| `/ctx` | Token usage |
-| `/save` | Save session |
-| `/exit` | Quit |
+### Option A: GitHub Pages (Website — সবসময় চালু!)
+ওয়েবসাইট **সবসময় চালু** — GitHub Pages বিনামূল্যে ২৪/৭ serve করে।
+Users `https://joy123123123.github.io` এ গিয়ে সরাসরি JoyAI ব্যবহার করতে পারে।
+**Pollinations AI server আলাদাভাবে চালু থাকে — তোমাকে কিছু করতে হবে না।**
+
+### Option B: নিজের Server থেকে সবার জন্য (VPS)
+```bash
+# যেকোনো Linux server-এ (AWS/DigitalOcean/Hostinger)
+npm install -g pm2                    # process manager
+git clone https://github.com/Joy123123123/Joy123123123.github.io
+cd Joy123123123.github.io/cli
+npm install
+pm2 start "node index.js --web 3000" --name joyai
+pm2 save && pm2 startup               # auto-start on reboot
+```
+
+Server IP/domain দিলে সবাই access করতে পারবে:
+`http://your-server-ip:3000`
+
+### Option C: Termux (Android — ২৪/৭)
+```bash
+pkg install nodejs git
+git clone https://github.com/Joy123123123/Joy123123123.github.io
+cd Joy123123123.github.io/cli && npm install
+node index.js --web                   # পরিবারের সবাই same WiFi-তে use করতে পারবে
+```
+
+### Option D: Ollama + Server (নিজস্ব AI ২৪/৭)
+```bash
+# Server-এ Ollama install
+curl -fsSL https://ollama.com/install.sh | sh
+ollama serve &                         # background-এ চালু রাখো
+ollama pull llama3.2                   # model download
+
+# JoyAI web server
+node index.js --setup                  # Ollama বেছে নাও
+node index.js --web 3000
+```
 
 ---
 
-## 🤖 Recommended Models
+## ❓ Ollama সম্পর্কে
 
-| Model | Size | Best For |
-|-------|------|---------|
-| `llama3.3` | 42GB | Best quality |
-| `llama3.2` | 2GB | Great balance ✓ default |
-| `deepseek-r1` | 7GB | Best reasoning |
-| `codellama` | 4GB | Best for code |
-| `tinyllama` | 600MB | Android/phones |
+**Ollama কী?**
+- তোমার নিজের মেশিনে AI model চালানোর software
+- No API key, no cost, unlimited, offline
+- Data তোমার কাছে থাকে — কোথাও যায় না
+
+**Ollama ব্যবহার করতে:**
+```bash
+# 1. Install (one time)
+curl -fsSL https://ollama.com/install.sh | sh   # Linux/Mac
+# Windows: https://ollama.com/download
+
+# 2. Model download (one time, ~4GB)
+ollama pull llama3.2
+
+# 3. Setup JoyAI to use Ollama
+node index.js --setup   # Option 2 বেছে নাও
+```
+
+**সাধারণ visitors-এর জন্য Ollama লাগে না।** Pollinations ব্যবহার করলে কিছুই লাগে না।
+
+---
+
+## 💬 Commands (Terminal)
+
+| Command | কাজ |
+|---------|-----|
+| `/help` | সব command দেখাও |
+| `/setup` | AI engine বদলাও |
+| `/status` | কোন AI চলছে দেখাও |
+| `/models` | Ollama models দেখাও |
+| `/pull llama3.3` | Model download করো |
+| `/web [port]` | Browser UI চালু করো |
+| `/advanced` | Advanced coding mode |
+| `/ls` | Files দেখাও |
+| `/run <cmd>` | Terminal command চালাও |
+| `/save` | Session save করো |
+| `/exit` | বন্ধ করো |
+
+---
+
+## 🤖 Best Models (Ollama)
 
 ```bash
-ollama pull llama3.3      # best
-ollama pull deepseek-r1   # reasoning
-ollama pull codellama     # coding
+ollama pull llama3.3      # Best quality (42GB)
+ollama pull llama3.2      # Good balance (2GB) ← default
+ollama pull deepseek-r1   # Best reasoning (7GB)
+ollama pull codellama     # Best for code (4GB)
+ollama pull tinyllama     # Android/phones (600MB)
 ```
 
 ---
 
-## 📬 Contact
+## 📬 যোগাযোগ / Contact
 
-- **Email**: joyaiofficialbd@gmail.com
-- **Facebook**: https://www.facebook.com/share/18Q6mnNeAr/
-- **GitHub**: https://github.com/Joy123123123
-
----
-
-## 🏆 Why JoyAI is the Best
-
-- **Zero external dependency** — Ollama runs 100% locally
-- **Truly unlimited** — no rate limits, no quotas, no payment
-- **Privacy** — your data never leaves your machine
-- **Better than ChatGPT** — llama3.3 70B matches GPT-4 quality
-- **Bangladesh-made** 🇧🇩 — the world's first truly free AI platform from Bangladesh
+| | |
+|--|--|
+| 📧 Email | joyaiofficialbd@gmail.com |
+| 📘 Facebook | https://www.facebook.com/share/18Q6mnNeAr/ |
+| 🐙 GitHub | https://github.com/Joy123123123 |
 
 ---
 
-*Made with ❤️ in Bangladesh — by Md Jamil Islam*
+## 🏆 কেন JoyAI World's Best?
+
+| বৈশিষ্ট্য | JoyAI | ChatGPT | Claude |
+|-----------|-------|---------|--------|
+| সম্পূর্ণ বিনামূল্যে | ✅ | ❌ ($20/mo) | ❌ ($20/mo) |
+| কোনো signup লাগে না | ✅ | ❌ | ❌ |
+| নিজস্ব AI চালানো যায় | ✅ (Ollama) | ❌ | ❌ |
+| Bangla support | ✅ | আংশিক | আংশিক |
+| Bangladesh থেকে তৈরি | ✅ | ❌ | ❌ |
+| Advanced Coding IDE | ✅ | ❌ | ❌ |
+| Offline mode | ✅ (Ollama) | ❌ | ❌ |
+
+---
+
+*🇧🇩 Made with ❤️ in Bangladesh by Md Jamil Islam*

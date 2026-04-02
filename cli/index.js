@@ -64,29 +64,32 @@ function loadConfig() { try { CFG = JSON.parse(readFileSync(CONFIG_PATH, 'utf8')
 function saveConfig(p) { CFG = { ...CFG, ...p }; writeFileSync(CONFIG_PATH, JSON.stringify(CFG, null, 2)); }
 loadConfig();
 
-// Provider resolution — Ollama is PRIMARY (own AI)
+// Provider resolution — priority: saved config, then Pollinations (zero setup)
 const OLLAMA_HOST = process.env.OLLAMA_HOST || CFG.ollama_host || 'http://localhost:11434';
 const GROQ_KEY    = process.env.GROQ_API_KEY  || CFG.groq_key;
 const GEMINI_KEY  = process.env.GEMINI_API_KEY || CFG.gemini_key;
 
-// Default to Ollama (own AI), fall back to API providers only if configured
 let PROVIDER, API_KEY, BASE_URL, DEFAULT_MODEL;
 
-const preferProv = CFG.provider || 'ollama';
+const activeProvider = CFG.provider || 'pollinations';
 
-if (preferProv === 'groq' && GROQ_KEY) {
+if (activeProvider === 'groq' && GROQ_KEY) {
   PROVIDER = 'groq'; API_KEY = GROQ_KEY;
   BASE_URL = 'https://api.groq.com/openai/v1';
   DEFAULT_MODEL = CFG.model || 'llama-3.3-70b-versatile';
-} else if (preferProv === 'gemini' && GEMINI_KEY) {
+} else if (activeProvider === 'gemini' && GEMINI_KEY) {
   PROVIDER = 'gemini'; API_KEY = GEMINI_KEY;
   BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/openai';
   DEFAULT_MODEL = CFG.model || 'gemini-2.0-flash';
-} else {
-  // Default: Ollama — own AI, unlimited, offline
+} else if (activeProvider === 'ollama') {
   PROVIDER = 'ollama'; API_KEY = null;
   BASE_URL = OLLAMA_HOST + '/v1';
   DEFAULT_MODEL = CFG.model || 'llama3.2';
+} else {
+  // DEFAULT: Pollinations — zero setup, free, works everywhere
+  PROVIDER = 'pollinations'; API_KEY = null;
+  BASE_URL = 'https://text.pollinations.ai/openai';
+  DEFAULT_MODEL = CFG.model || 'openai';
 }
 
 let currentModel = process.env.AI_MODEL || DEFAULT_MODEL;
@@ -225,19 +228,29 @@ function toolMoveFile(from, to) {
   } catch (e) { return { success: false, error: e.message }; }
 }
 function toolRunShell(command, description) {
-  console.log('\n  ' + C.cmd('⚡ ') + C.bold(command));
+  // Validate: command must be a non-empty string within a safe length
+  if (typeof command !== 'string' || !command.trim()) {
+    console.log(C.err('  ✗ run_shell: empty command\n'));
+    return Promise.resolve({ success: false, exitCode: -1, output: 'empty command' });
+  }
+  if (command.length > 4096) {
+    console.log(C.err('  ✗ run_shell: command too long (max 4096 chars)\n'));
+    return Promise.resolve({ success: false, exitCode: -1, output: 'command too long' });
+  }
+  const cmd = command.trim();
+  console.log('\n  ' + C.cmd('⚡ ') + C.bold(cmd));
   if (description) console.log('  ' + C.dim('   ' + description));
   return new Promise(res => {
     const start = Date.now(); let out = '', frame = 0;
     const spin = setInterval(() => {
       process.stdout.write('\r  ' + C.cmd(SPIN[frame++ % SPIN.length]) + ' ' + C.dim('running… ' + ((Date.now()-start)/1000).toFixed(1) + 's') + '   ');
     }, 80);
-    const proc = spawn('sh', ['-c', command], { cwd: workDir, env: { ...process.env, TERM: 'xterm-256color', FORCE_COLOR: '1' } });
+    const proc = spawn('sh', ['-c', cmd], { cwd: workDir, env: { ...process.env, TERM: 'xterm-256color', FORCE_COLOR: '1' } });
     proc.stdout.on('data', d => { out += d.toString(); });
     proc.stderr.on('data', d => { out += d.toString(); });
     proc.on('close', code => {
       clearInterval(spin); process.stdout.write('\r' + ' '.repeat(60) + '\r');
-      drawOutputBox(command.slice(0, 42) + (command.length > 42 ? '…' : '') + '  (' + ((Date.now()-start)/1000).toFixed(2) + 's)', out.trim(), code ?? 0);
+      drawOutputBox(cmd.slice(0, 42) + (cmd.length > 42 ? '…' : '') + '  (' + ((Date.now()-start)/1000).toFixed(2) + 's)', out.trim(), code ?? 0);
       res({ success: code === 0, exitCode: code ?? 0, output: out.trim() });
     });
     proc.on('error', e => {
@@ -275,10 +288,11 @@ async function runToolCalls(text) {
 }
 
 // ════════════════════════════════════════════════════════
-// AI — STREAMING SUPPORT (Ollama + OpenAI-compatible)
+// AI — STREAMING SUPPORT (Pollinations + Ollama + OpenAI-compatible)
 // ════════════════════════════════════════════════════════
 async function streamChat(messages) {
-  const isOllama = PROVIDER === 'ollama';
+  const isOllama       = PROVIDER === 'ollama';
+  const isPollinations = PROVIDER === 'pollinations';
   const headers = { 'Content-Type': 'application/json' };
   if (API_KEY) headers['Authorization'] = 'Bearer ' + API_KEY;
 
@@ -314,7 +328,19 @@ async function streamChat(messages) {
     return full;
   }
 
-  // OpenAI-compatible (Groq, Gemini, OpenAI)
+  // Pollinations: use non-streaming (simpler, more reliable)
+  if (isPollinations) {
+    const r = await fetch('https://text.pollinations.ai/openai', {
+      method: 'POST', headers,
+      body: JSON.stringify({ model: currentModel, messages, max_tokens: 8192, stream: false }),
+      signal: AbortSignal.timeout(90_000),
+    });
+    if (!r.ok) throw new Error('Pollinations ' + r.status + ': ' + (await r.text().catch(() => '')).slice(0, 200));
+    const d = await r.json();
+    return d.choices?.[0]?.message?.content || 'No response';
+  }
+
+  // OpenAI-compatible (Groq, Gemini)
   const r = await fetch(BASE_URL + '/chat/completions', {
     method: 'POST', headers,
     body: JSON.stringify({ model: currentModel, messages, stream: true, temperature: 0.7, max_tokens: 8192 }),
@@ -492,30 +518,36 @@ async function runSetup() {
   console.log(C.green('  ╚' + '═'.repeat(w) + '╝\n'));
 
   console.log(C.info('  AI Engine বেছে নাও:\n'));
-  console.log('  ' + C.bold('1') + C.green('  Ollama (Own AI) ') + C.ok('★ RECOMMENDED') + C.dim(' — unlimited, offline, NO API key'));
+  console.log('  ' + C.bold('1') + '  ' + C.brand('Pollinations') + C.ok(' ★ DEFAULT') + C.dim(' — zero setup, free, works everywhere'));
+  console.log('     ' + C.dim('No API key needed. Works immediately.'));
+  console.log('');
+  console.log('  ' + C.bold('2') + C.green('  Ollama (Own AI) ') + C.dim(' — unlimited, offline, NO API key'));
   console.log('     ' + C.dim('Install: ') + C.info('https://ollama.com') + C.dim(' → then: ollama pull llama3.3'));
   console.log('');
-  console.log('  ' + C.bold('2') + '  Groq    ' + C.dim('— llama-3.3-70b, 14k req/day free'));
+  console.log('  ' + C.bold('3') + '  Groq    ' + C.dim('— llama-3.3-70b, 14k req/day free'));
   console.log('     ' + C.dim('Key:     ') + C.info('https://console.groq.com'));
   console.log('');
-  console.log('  ' + C.bold('3') + '  Gemini  ' + C.dim('— gemini-2.0-flash, 1500 req/day free'));
+  console.log('  ' + C.bold('4') + '  Gemini  ' + C.dim('— gemini-2.0-flash, 1500 req/day free'));
   console.log('     ' + C.dim('Key:     ') + C.info('https://aistudio.google.com'));
   console.log('');
 
-  const choice = (await ask('  ' + C.green('বেছে নাও (1/2/3): '))).trim();
-  let patch = { provider: 'ollama' };
+  const choice = (await ask('  ' + C.green('বেছে নাও (1/2/3/4) [1=default]: '))).trim() || '1';
+  let patch = { provider: 'pollinations', model: 'openai' };
 
   if (choice === '1') {
+    patch = { provider: 'pollinations', model: 'openai' };
+    console.log('\n  ' + C.ok('✓ Pollinations — no setup needed!'));
+  } else if (choice === '2') {
     const host  = (await ask('  ' + C.dim('Ollama host [' + OLLAMA_HOST + ']: '))).trim() || OLLAMA_HOST;
     const model = (await ask('  ' + C.dim('Model [llama3.2]: '))).trim() || 'llama3.2';
     patch = { provider: 'ollama', ollama_host: host, model };
     console.log('\n  ' + C.dim('Ollama setup:'));
     console.log('  ' + C.cmd('  ollama serve') + C.dim('             ← run this in another terminal'));
     console.log('  ' + C.cmd('  ollama pull ' + model) + C.dim('  ← download model (once)'));
-  } else if (choice === '2') {
+  } else if (choice === '3') {
     const key = (await ask('  ' + C.dim('Groq API key: '))).trim();
     if (key) patch = { provider: 'groq', groq_key: key, model: 'llama-3.3-70b-versatile' };
-  } else if (choice === '3') {
+  } else if (choice === '4') {
     const key = (await ask('  ' + C.dim('Gemini API key: '))).trim();
     if (key) patch = { provider: 'gemini', gemini_key: key, model: 'gemini-2.0-flash' };
   }
@@ -739,16 +771,17 @@ async function handleCommand(raw) {
 function printBanner() {
   const w = Math.min(W(), 60);
   const pBadge = {
-    ollama: C.green(' OWN AI ') + C.dim('(Ollama)'),
-    groq:   C.info(' GROQ '),
-    gemini: C.info(' GEMINI '),
+    pollinations: C.brand(' 🚀 POLLINATIONS ') + C.dim('(free · no setup)'),
+    ollama: C.green(' 🏠 OWN AI ') + C.dim('(Ollama)'),
+    groq:   C.info(' ⚡ GROQ '),
+    gemini: C.info(' ✦ GEMINI '),
     openai: C.info(' OPENAI '),
   }[PROVIDER] || C.dim(' ? ');
 
   console.log('');
   console.log(C.green('  ╔' + '═'.repeat(w) + '╗'));
   console.log(C.green('  ║') + '  ' + C.bold('Joy') + C.brand.bold('AI') + '  ' + C.dim('Bangladeshi Intelligent AI') + '  ' + '🇧🇩' + ' '.repeat(Math.max(1, w - 36)) + C.green('║'));
-  console.log(C.green('  ║') + '  ' + C.dim('by Md Jamil Islam  ·  v4.0') + ' '.repeat(Math.max(1, w - 28)) + C.green('║'));
+  console.log(C.green('  ║') + '  ' + C.dim('by Md Jamil Islam  ·  v4.1') + ' '.repeat(Math.max(1, w - 28)) + C.green('║'));
   console.log(C.green('  ║') + '  ' + C.dim('joyaiofficialbd@gmail.com') + ' '.repeat(Math.max(1, w - 27)) + C.green('║'));
   console.log(C.green('  ╚' + '═'.repeat(w) + '╝'));
   console.log('');

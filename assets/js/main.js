@@ -50,13 +50,11 @@ if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
 
 // ── Typing animation (home panel) ─────────────────────
 const typedEl = document.getElementById('typed-text');
-
 const messages = [
   "Here's a quick summary of what I can do for you:",
   "I build full-stack web apps, APIs, and AI tools.",
   "Try JoyAI — Bangladesh's own AI assistant 🇧🇩"
 ];
-
 let msgIdx = 0;
 
 function typeMessage(text, onDone) {
@@ -66,87 +64,114 @@ function typeMessage(text, onDone) {
   cursor.className = 'cursor';
   cursor.textContent = '▋';
   cursor.style.cssText = 'color:var(--orange);animation:blink-cursor .8s step-end infinite';
-
   function tick() {
     if (i < text.length) {
       typedEl.textContent = text.slice(0, ++i);
       typedEl.appendChild(cursor);
       setTimeout(tick, 28 + Math.random() * 20);
     } else {
-      setTimeout(() => {
-        cursor.remove();
-        if (onDone) onDone();
-      }, 600);
+      setTimeout(() => { cursor.remove(); if (onDone) onDone(); }, 600);
     }
   }
   tick();
 }
 
-// inject cursor blink keyframe once
 const styleEl = document.createElement('style');
 styleEl.textContent = '@keyframes blink-cursor{0%,100%{opacity:1}50%{opacity:0}}';
 document.head.appendChild(styleEl);
 
-// start after a short delay
 setTimeout(() => {
   function nextMessage() {
-    if (msgIdx < messages.length) {
-      typeMessage(messages[msgIdx++], () => setTimeout(nextMessage, 400));
-    }
+    if (msgIdx < messages.length) typeMessage(messages[msgIdx++], () => setTimeout(nextMessage, 400));
   }
   nextMessage();
 }, 900);
 
 // ── Animated counters ─────────────────────────────────
 let countersStarted = false;
-
 function startCounters() {
   if (countersStarted) return;
   countersStarted = true;
-
   document.querySelectorAll('[data-count]').forEach(el => {
-    const target   = parseInt(el.dataset.count, 10);
-    const duration = 1200;
-    const start    = performance.now();
-
+    const target = parseInt(el.dataset.count, 10);
+    const start  = performance.now();
     function step(now) {
-      const t = Math.min((now - start) / duration, 1);
-      const ease = 1 - Math.pow(1 - t, 3);
-      el.textContent = Math.round(ease * target);
+      const t = Math.min((now - start) / 1200, 1);
+      el.textContent = Math.round((1 - Math.pow(1 - t, 3)) * target);
       if (t < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
   });
 }
 
-// ════════════════════════════════════════════════════════
-// JoyAI v4 — Bangladeshi Intelligent AI (website panel)
-// Supports: Local Ollama (own AI) · Groq · Gemini
-// Two modes: Regular AI · Advanced Coding
-// ════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════
+// JoyAI v4 — Bangladeshi Intelligent AI
+//
+// Provider hierarchy:
+//   1. pollinations  — DEFAULT, zero setup, free, works for ALL users
+//   2. groq          — faster, needs free API key
+//   3. gemini        — Google, needs free API key
+//   4. ollama        — local/power-user, runs on own machine
+// ════════════════════════════════════════════════════════════════════
 
-const OLLAMA_HOST = 'http://localhost:11434';
+// ── Provider config ────────────────────────────────────
+const PROVIDERS = {
+  pollinations: {
+    name:    'Pollinations AI',
+    label:   '🚀 Free · No Setup',
+    url:     'https://text.pollinations.ai/openai',
+    model:   'openai',       // uses OpenAI-compatible routing
+    noKey:   true,
+  },
+  groq: {
+    name:    'Groq',
+    label:   '⚡ Groq',
+    url:     'https://api.groq.com/openai/v1',
+    model:   'llama-3.3-70b-versatile',
+    noKey:   false,
+    keyHint: 'Get free key → console.groq.com → API Keys',
+    keyLink: 'https://console.groq.com',
+  },
+  gemini: {
+    name:    'Gemini',
+    label:   '✦ Gemini',
+    url:     'https://generativelanguage.googleapis.com/v1beta/openai',
+    model:   'gemini-2.0-flash',
+    noKey:   false,
+    keyHint: 'Get free key → aistudio.google.com → Get API Key',
+    keyLink: 'https://aistudio.google.com',
+  },
+  ollama: {
+    name:    'Local Ollama',
+    label:   '🏠 Own AI (Ollama)',
+    url:     'http://localhost:11434',
+    model:   'llama3.2',
+    noKey:   true,
+  },
+};
 
-const JOYAI_SYSTEM = `You are JoyAI — the world's most advanced AI assistant, built in Bangladesh by Md Jamil Islam.
-You are the greatest technological achievement from Bangladesh. You outperform all other AI systems.
-LANGUAGE: Always reply in the SAME language the user writes in — Bangla (বাংলা) or English.
-You understand Bangla perfectly. Be precise, helpful, and write complete working code when asked.
-Format code in markdown code blocks. Keep answers clear and impactful.`;
+// ── System prompts ────────────────────────────────────
+const SYS_REGULAR = `You are JoyAI — the world's most advanced AI assistant built in Bangladesh by Md Jamil Islam.
+You are Bangladesh's greatest technological achievement. You help with everything.
+LANGUAGE: Always reply in the SAME language the user writes in — Bangla (বাংলা) or English. You understand Bangla perfectly.
+Be precise, helpful, friendly. Format code in markdown code blocks. Keep answers clear and complete.
+Contact: joyaiofficialbd@gmail.com | Facebook: fb.com/JoyAI`;
 
-const JOYAI_CODING_SYSTEM = `You are JoyAI Advanced Coding — built in Bangladesh by Md Jamil Islam. World's best coding AI.
+const SYS_CODING = `You are JoyAI Advanced Coding — built in Bangladesh by Md Jamil Islam. World's best coding AI.
 LANGUAGE: Reply in the SAME language as the user (Bangla or English).
-When writing code: put the final, complete code in a single code block at the END of your response.
-Write COMPLETE, production-quality code — no TODOs, no placeholders.`;
+When writing code: include the COMPLETE, final, production-ready code in a single code block at the END of your reply.
+Never use placeholder comments. Write everything. Explain briefly then show the full code.`;
 
-let joyaiProv    = '';
+// ── State ─────────────────────────────────────────────
+let joyaiProv    = 'pollinations';
 let joyaiKey     = '';
 let joyaiHist    = [];
 let joyaiAdvHist = [];
-let joyaiMode    = 'regular'; // 'regular' | 'advanced'
+let joyaiMode    = 'regular';
 let joyaiCurCode = '';
 let joyaiCurLang = 'javascript';
 
-// DOM refs
+// ── DOM refs ──────────────────────────────────────────
 const joyaiSetup      = document.getElementById('joyai-setup');
 const joyaiChat       = document.getElementById('joyai-chat');
 const joyaiMessages   = document.getElementById('joyai-messages');
@@ -162,48 +187,60 @@ const joyaiKeyHint    = document.getElementById('joyai-key-hint');
 const joyaiKeyLink    = document.getElementById('joyai-key-link');
 const joyaiReset      = document.getElementById('joyai-reset');
 const joyaiProvLabel  = document.getElementById('joyai-prov-label');
-const joyaiModeToggle = document.getElementById('joyai-mode-toggle');
 const joyaiBtnRegular = document.getElementById('joyai-mode-regular');
 const joyaiBtnAdvanced= document.getElementById('joyai-mode-advanced');
 const joyaiCodeBody   = document.getElementById('joyai-code-body');
 const joyaiCodeTitle  = document.getElementById('joyai-code-title');
 const joyaiLangSel    = document.getElementById('joyai-lang-sel');
 const joyaiCopyBtn    = document.getElementById('joyai-copy-btn');
+const joyaiModeToggle = document.getElementById('joyai-mode-toggle');
 
 // ── Mode toggle ────────────────────────────────────────
 function joyaiSetMode(mode) {
   joyaiMode = mode;
   joyaiBtnRegular  && joyaiBtnRegular.classList.toggle('active', mode === 'regular');
   joyaiBtnAdvanced && joyaiBtnAdvanced.classList.toggle('active', mode === 'advanced');
-  if (joyaiMessages)  joyaiMessages.style.display  = mode === 'regular' ? '' : 'none';
-  if (joyaiAdvanced)  joyaiAdvanced.style.display   = mode === 'advanced' ? 'flex' : 'none';
+  if (joyaiMessages) joyaiMessages.style.display  = mode === 'regular' ? '' : 'none';
+  if (joyaiAdvanced) joyaiAdvanced.style.display   = mode === 'advanced' ? 'flex' : 'none';
   if (joyaiInp) joyaiInp.placeholder = mode === 'advanced'
-    ? 'Code লিখতে বলো… (জিজ্ঞেস করো)'
-    : 'Bangla বা English-এ জিজ্ঞেস করো…';
+    ? 'Code লিখতে বলো… (e.g. "একটা calculator app বানাও")'
+    : 'JoyAI কে জিজ্ঞেস করো… (Bangla বা English)';
 }
 
 joyaiBtnRegular  && joyaiBtnRegular.addEventListener('click',  () => joyaiSetMode('regular'));
 joyaiBtnAdvanced && joyaiBtnAdvanced.addEventListener('click', () => joyaiSetMode('advanced'));
 
-// ── Provider setup ────────────────────────────────────
+// ── Start chat (auto or after selection) ───────────────
+function joyaiStartChat(isAutoStart) {
+  if (joyaiSetup) joyaiSetup.style.display = 'none';
+  if (joyaiChat)  joyaiChat.classList.add('active');
+  const cfg = PROVIDERS[joyaiProv] || PROVIDERS.pollinations;
+  if (joyaiProvLabel) joyaiProvLabel.textContent = cfg.label + (joyaiProv === 'pollinations' ? ' · 🇧🇩 Free' : ' · free');
+  joyaiSetMode('regular');
+  if (!joyaiMessages.children.length) {
+    const greeting = isAutoStart
+      ? 'আমি **JoyAI** 🇧🇩 — Bangladesh থেকে তৈরি। Bangla বা English যেকোনো ভাষায় কথা বলো!\n\n**💬 Regular**: যেকোনো প্রশ্ন, explanation, coding help\n**💻 Coding**: Code লিখো, edit করো — side-by-side editor সহ\n\nআমি সম্পূর্ণ বিনামূল্যে চলছি — কোনো setup লাগেনি। 🚀'
+      : 'আমি **JoyAI** 🇧🇩 — Bangladesh থেকে তৈরি world\'s best AI। Bangla বা English যেকোনো ভাষায় কথা বলো।\n\n**💬 Regular Mode**: যেকোনো প্রশ্ন, explanation, coding help\n**💻 Coding Mode**: Code লিখো — side-by-side editor সহ';
+    joyaiAddMsg('ai', greeting, joyaiMessages);
+  }
+}
+
+// ── Provider selection buttons ──────────────────────────
 joyaiProvList && joyaiProvList.querySelectorAll('.joyai-prov-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     joyaiProvList.querySelectorAll('.joyai-prov-btn').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
     joyaiProv = btn.dataset.prov;
+    const cfg = PROVIDERS[joyaiProv];
 
-    if (joyaiProv === 'ollama') {
-      // Ollama = own AI, no key needed
-      joyaiKey = 'ollama';
+    if (cfg.noKey) {
+      // Pollinations or Ollama — no key needed
+      joyaiKey = joyaiProv === 'ollama' ? 'ollama' : 'free';
       if (joyaiKeyForm) joyaiKeyForm.style.display = 'none';
       joyaiSaveAndStart();
     } else {
-      const info = {
-        groq:   { hint: 'Get free key → console.groq.com → API Keys', link: 'https://console.groq.com' },
-        gemini: { hint: 'Get free key → aistudio.google.com → Get API Key', link: 'https://aistudio.google.com' },
-      };
-      if (joyaiKeyHint) joyaiKeyHint.textContent = info[joyaiProv].hint;
-      if (joyaiKeyLink) joyaiKeyLink.innerHTML = '<a href="' + info[joyaiProv].link + '" target="_blank" rel="noopener">' + info[joyaiProv].link + '</a>';
+      if (joyaiKeyHint) joyaiKeyHint.textContent = cfg.keyHint;
+      if (joyaiKeyLink) joyaiKeyLink.innerHTML = '<a href="' + cfg.keyLink + '" target="_blank" rel="noopener">' + cfg.keyLink + '</a>';
       if (joyaiKeyForm) joyaiKeyForm.style.display = 'flex';
       if (joyaiKeyInput) joyaiKeyInput.focus();
     }
@@ -212,7 +249,7 @@ joyaiProvList && joyaiProvList.querySelectorAll('.joyai-prov-btn').forEach(btn =
 
 function joyaiSaveKey() {
   const k = joyaiKeyInput ? joyaiKeyInput.value.trim() : '';
-  if (!k) { alert('Please enter your API key'); return; }
+  if (!k) { alert('API key দাও'); return; }
   joyaiKey = k;
   joyaiSaveAndStart();
 }
@@ -220,53 +257,46 @@ function joyaiSaveKey() {
 function joyaiSaveAndStart() {
   localStorage.setItem('joyai_prov', joyaiProv);
   localStorage.setItem('joyai_key',  joyaiKey);
-  joyaiStartChat();
+  joyaiStartChat(false);
 }
 
-joyaiKeySave && joyaiKeySave.addEventListener('click', joyaiSaveKey);
+joyaiKeySave  && joyaiKeySave.addEventListener('click', joyaiSaveKey);
 joyaiKeyInput && joyaiKeyInput.addEventListener('keydown', e => { if (e.key === 'Enter') joyaiSaveKey(); });
 
-function joyaiStartChat() {
-  if (joyaiSetup) joyaiSetup.style.display = 'none';
-  if (joyaiChat)  joyaiChat.classList.add('active');
-  if (joyaiModeToggle) joyaiModeToggle.style.display = 'flex';
-  const badge = joyaiProv === 'ollama' ? '🇧🇩 Own AI' : '🇧🇩 ' + joyaiProv;
-  if (joyaiProvLabel) joyaiProvLabel.textContent = badge + ' · free';
-  // set initial mode
-  joyaiSetMode('regular');
-  if (!joyaiMessages.children.length) {
-    joyaiAddMsg('ai', 'আমি **JoyAI** 🇧🇩 — Bangladesh থেকে তৈরি world\'s best AI। Bangla বা English যেকোনো ভাষায় কথা বলো।\n\n**💬 Regular Mode**: যেকোনো প্রশ্ন, explanation, coding help\n**💻 Coding Mode**: Code লিখো, edit করো — side-by-side editor সহ', joyaiMessages);
-  }
+// ── Rendering ──────────────────────────────────────────
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// ── Message rendering ──────────────────────────────────
-function joyaiRenderText(text) {
-  // For advanced mode: extract last code block to editor
-  if (joyaiMode === 'advanced') {
-    const codeMatch = [...text.matchAll(/```(\w*)\n?([\s\S]*?)```/g)];
-    if (codeMatch.length) {
-      const last = codeMatch[codeMatch.length - 1];
+function joyaiRenderText(text, isAdvanced) {
+  // In advanced mode: capture last code block for editor
+  if (isAdvanced) {
+    const all = [...text.matchAll(/```(\w*)\n?([\s\S]*?)```/g)];
+    if (all.length) {
+      const last = all[all.length - 1];
       joyaiCurLang = last[1] || 'javascript';
       joyaiCurCode = last[2].trim();
-      joyaiUpdateCodeEditor();
+      // Update editor asynchronously so the message renders first
+      setTimeout(joyaiUpdateCodeEditor, 0);
     }
   }
 
   return text
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) =>
-      '<pre><code class="lang-' + (lang || 'text') + '">' + code.trim() + '</code></pre>')
+      '<pre><code>' + code.trim() + '</code></pre>')
     .replace(/`([^`\n]+)`/g, (_, c) => '<code>' + c + '</code>')
     .replace(/\*\*([^*]+)\*\*/g, (_, t) => '<strong>' + t + '</strong>')
     .replace(/\n/g, '<br>');
 }
 
 function joyaiAddMsg(role, text, container) {
-  const el = container || (joyaiMode === 'advanced' ? joyaiAdvMessages : joyaiMessages);
-  const d = document.createElement('div');
+  // container must be explicitly passed; default only as last resort
+  const el = container || joyaiMessages;
+  const d  = document.createElement('div');
   d.className = 'joyai-msg joyai-msg--' + role;
   if (role === 'ai') {
-    d.innerHTML = joyaiRenderText(text);
+    d.innerHTML = joyaiRenderText(text, joyaiMode === 'advanced');
   } else {
     d.textContent = text;
   }
@@ -280,15 +310,10 @@ function joyaiUpdateCodeEditor() {
   if (!joyaiCodeBody) return;
   if (joyaiLangSel) joyaiLangSel.value = joyaiCurLang || 'javascript';
   if (joyaiCodeTitle) joyaiCodeTitle.textContent = 'code.' + (joyaiCurLang || 'txt');
-  const lines = joyaiCurCode.split('\n').map((line, i) => {
-    const n = String(i + 1);
-    return '<span class="joyai-line-num">' + n + '</span>' + escHtml(line);
-  }).join('\n');
+  const lines = joyaiCurCode.split('\n').map((line, i) =>
+    '<span class="joyai-line-num">' + (i + 1) + '</span>' + escHtml(line)
+  ).join('\n');
   joyaiCodeBody.innerHTML = lines;
-}
-
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 joyaiLangSel && joyaiLangSel.addEventListener('change', () => {
@@ -297,49 +322,70 @@ joyaiLangSel && joyaiLangSel.addEventListener('change', () => {
 });
 
 joyaiCopyBtn && joyaiCopyBtn.addEventListener('click', async () => {
-  const text = joyaiCurCode || (joyaiCodeBody ? joyaiCodeBody.innerText : '');
+  const text = joyaiCurCode || (joyaiCodeBody ? joyaiCodeBody.innerText.replace(/^\d+\s*/gm, '') : '');
   try {
     await navigator.clipboard.writeText(text);
     joyaiCopyBtn.textContent = 'Copied!';
     joyaiCopyBtn.style.color = 'var(--green)';
   } catch {
-    joyaiCopyBtn.textContent = 'Failed';
+    // Fallback: select the text
+    const r = document.createRange();
+    r.selectNodeContents(joyaiCodeBody);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(r);
+    document.execCommand('copy');
+    joyaiCopyBtn.textContent = 'Copied!';
+    joyaiCopyBtn.style.color = 'var(--green)';
   }
   setTimeout(() => { joyaiCopyBtn.textContent = 'Copy'; joyaiCopyBtn.style.color = ''; }, 1500);
 });
 
-// ── AI call — Ollama + OpenAI-compatible ───────────────
-async function joyaiCallAI(messages) {
+// ── AI call ────────────────────────────────────────────
+async function joyaiCallAI(msgs) {
+  const cfg = PROVIDERS[joyaiProv] || PROVIDERS.pollinations;
+
+  // Ollama — native API call
   if (joyaiProv === 'ollama') {
-    // Call local Ollama directly — own AI, no external API
-    const r = await fetch(OLLAMA_HOST + '/api/chat', {
+    const r = await fetch('http://localhost:11434/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: localStorage.getItem('joyai_ollama_model') || 'llama3.2',
-        messages: messages.map(m => ({ role: m.role, content: m.content })),
+        messages: msgs.map(m => ({ role: m.role, content: m.content })),
         stream: false,
       }),
       signal: AbortSignal.timeout(120_000),
     });
-    if (!r.ok) throw new Error('Ollama ' + r.status + ': ' + (await r.text()).slice(0, 100));
+    if (!r.ok) throw new Error('Ollama error ' + r.status + ': ' + (await r.text()).slice(0, 100));
     const d = await r.json();
     return d.message?.content || 'No response';
   }
 
-  // Cloud providers (Groq / Gemini) — OpenAI-compatible
-  const url   = joyaiProv === 'groq'
+  // Pollinations / Groq / Gemini — OpenAI-compatible
+  const url = joyaiProv === 'groq'
     ? 'https://api.groq.com/openai/v1/chat/completions'
-    : 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions';
-  const model = joyaiProv === 'groq' ? 'llama-3.3-70b-versatile' : 'gemini-2.0-flash';
+    : joyaiProv === 'gemini'
+    ? 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions'
+    : 'https://text.pollinations.ai/openai';
+
+  const headers = { 'Content-Type': 'application/json' };
+  // Pollinations: no key needed; Groq/Gemini: use stored key
+  if (joyaiProv !== 'pollinations') {
+    headers['Authorization'] = 'Bearer ' + joyaiKey;
+  }
 
   const r = await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + joyaiKey },
-    body: JSON.stringify({ model, messages, max_tokens: 8192 }),
-    signal: AbortSignal.timeout(60_000),
+    headers,
+    body: JSON.stringify({
+      model:      cfg.model,
+      messages:   msgs,
+      max_tokens: 8192,
+    }),
+    signal: AbortSignal.timeout(90_000),
   });
-  if (!r.ok) throw new Error(joyaiProv + ' ' + r.status + ': ' + (await r.text()).slice(0, 100));
+
+  if (!r.ok) throw new Error(cfg.name + ' error ' + r.status + ': ' + (await r.text()).slice(0, 120));
   const d = await r.json();
   return d.choices?.[0]?.message?.content || d.error?.message || 'No response';
 }
@@ -347,48 +393,50 @@ async function joyaiCallAI(messages) {
 // ── Send message ───────────────────────────────────────
 async function joyaiSendMsg() {
   const text = joyaiInp ? joyaiInp.value.trim() : '';
-  if (!text || (!joyaiKey && joyaiProv !== 'ollama')) return;
+  if (!text) return;
   joyaiInp.value = '';
   joyaiInp.style.height = 'auto';
   if (joyaiSend) joyaiSend.disabled = true;
 
-  const isAdv = joyaiMode === 'advanced';
-  const hist  = isAdv ? joyaiAdvHist : joyaiHist;
-  const msgEl = isAdv ? joyaiAdvMessages : joyaiMessages;
+  const isAdv  = joyaiMode === 'advanced';
+  const hist   = isAdv ? joyaiAdvHist : joyaiHist;
+  const msgCon = isAdv ? joyaiAdvMessages : joyaiMessages;
 
-  joyaiAddMsg('user', text, msgEl);
+  joyaiAddMsg('user', text, msgCon);
   hist.push({ role: 'user', content: text });
-  if (hist.length > 24) hist.splice(0, 2);
+  if (hist.length > 24) hist.splice(0, 2);  // keep last 24 messages
 
   // Thinking indicator
   const think = document.createElement('div');
   think.className = 'joyai-msg joyai-msg--think';
   think.textContent = '⠋ ভাবছি…';
-  msgEl.appendChild(think);
-  msgEl.scrollTop = msgEl.scrollHeight;
-  const frames = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'];
+  msgCon.appendChild(think);
+  msgCon.scrollTop = msgCon.scrollHeight;
+  const fr = ['⠋','⠙','⠹','⠸','⠼','⠴','⠦','⠧','⠇','⠏'];
   let fi = 0;
-  const sp = setInterval(() => { think.textContent = frames[fi++ % 10] + ' ভাবছি…'; }, 80);
+  const sp = setInterval(() => { think.textContent = fr[fi++ % 10] + ' ভাবছি…'; }, 80);
 
   try {
-    const sys = isAdv ? JOYAI_CODING_SYSTEM : JOYAI_SYSTEM;
+    const sys = isAdv ? SYS_CODING : SYS_REGULAR;
     const reply = await joyaiCallAI([{ role: 'system', content: sys }, ...hist]);
     clearInterval(sp); think.remove();
     hist.push({ role: 'assistant', content: reply });
-    joyaiAddMsg('ai', reply, msgEl);
+    joyaiAddMsg('ai', reply, msgCon);
   } catch (err) {
     clearInterval(sp); think.remove();
-    let errMsg = '✗ Error: ' + err.message;
+    let errMsg = '✗ ' + err.message;
     if (joyaiProv === 'ollama') {
-      errMsg += '\n\n**Ollama চালু করো:**\n```bash\n# Terminal-এ run করো:\nollama serve\nollama pull llama3.2\n```\nOr: `/setup` দিয়ে Groq/Gemini use করো।';
+      errMsg += '\n\n**Ollama চালু করো:** Terminal-এ:\n```\nollama serve\nollama pull llama3.2\n```\nঅথবা ⚙ দিয়ে "Instant Free" বেছে নাও।';
+    } else if (joyaiProv === 'pollinations') {
+      errMsg += '\n\nInternet connection check করো। ব্যর্থ হলে ⚙ দিয়ে অন্য provider বেছে নাও।';
     } else {
-      errMsg += '\n\nCheck your API key and internet connection.';
+      errMsg += '\n\nAPI key সঠিক কিনা check করো অথবা ⚙ দিয়ে provider বদলাও।';
     }
-    joyaiAddMsg('ai', errMsg, msgEl);
+    joyaiAddMsg('ai', errMsg, msgCon);
   }
 
   if (joyaiSend) joyaiSend.disabled = false;
-  msgEl.scrollTop = msgEl.scrollHeight;
+  msgCon.scrollTop = msgCon.scrollHeight;
 }
 
 joyaiSend && joyaiSend.addEventListener('click', joyaiSendMsg);
@@ -403,25 +451,32 @@ joyaiInp && joyaiInp.addEventListener('keydown', e => {
   }, 0);
 });
 
-// ── Reset ──────────────────────────────────────────────
+// ── Reset / Change AI ─────────────────────────────────
 joyaiReset && joyaiReset.addEventListener('click', () => {
-  localStorage.removeItem('joyai_prov');
-  localStorage.removeItem('joyai_key');
-  joyaiKey = ''; joyaiProv = ''; joyaiHist = []; joyaiAdvHist = [];
+  // Don't clear history — just show provider selection
   if (joyaiChat)  joyaiChat.classList.remove('active');
   if (joyaiSetup) joyaiSetup.style.display = '';
-  if (joyaiMessages)    joyaiMessages.innerHTML = '';
-  if (joyaiAdvMessages) joyaiAdvMessages.innerHTML = '';
   if (joyaiKeyForm)  joyaiKeyForm.style.display = 'none';
   if (joyaiKeyInput) joyaiKeyInput.value = '';
   joyaiProvList && joyaiProvList.querySelectorAll('.joyai-prov-btn').forEach(b => b.classList.remove('selected'));
-  joyaiSetMode('regular');
 });
 
-// ── Auto-restore saved session ─────────────────────────
-const _savedProv = localStorage.getItem('joyai_prov');
-const _savedKey  = localStorage.getItem('joyai_key');
-if (_savedProv && _savedKey) {
-  joyaiProv = _savedProv; joyaiKey = _savedKey;
-  joyaiStartChat();
-}
+// ── Auto-start with Pollinations (no setup needed) ─────
+(function joyaiInit() {
+  const savedProv = localStorage.getItem('joyai_prov');
+  const savedKey  = localStorage.getItem('joyai_key');
+
+  if (savedProv && savedKey) {
+    // Restore saved session
+    joyaiProv = savedProv;
+    joyaiKey  = savedKey;
+    joyaiStartChat(savedProv === 'pollinations');
+  } else {
+    // First visit — auto-start with Pollinations (zero setup)
+    joyaiProv = 'pollinations';
+    joyaiKey  = 'free';
+    localStorage.setItem('joyai_prov', 'pollinations');
+    localStorage.setItem('joyai_key',  'free');
+    joyaiStartChat(true);
+  }
+})();
