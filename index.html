@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Md Jamil Islam — Developer & Builder. Personal site at amznon.me." />
+  <title>amznon.me — Md Jamil Islam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <!-- Navigation -->
+  <header class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <a href="#" class="navbar__logo">amznon<span class="accent">.me</span></a>
+      <nav class="navbar__links" id="nav-links">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="container hero__inner">
+      <div class="hero__badge">Available for Work</div>
+      <h1 class="hero__title">
+        Hi, I'm <span class="accent">Jamil</span>.<br />
+        I build things for the web.
+      </h1>
+      <p class="hero__subtitle">
+        Developer · Problem Solver · Open Source Enthusiast
+      </p>
+      <div class="hero__cta">
+        <a href="#projects" class="btn btn--primary">View My Work</a>
+        <a href="#contact" class="btn btn--outline">Get In Touch</a>
+      </div>
+    </div>
+    <div class="hero__scroll-indicator" aria-hidden="true">
+      <span>scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section" id="about">
+    <div class="container">
+      <h2 class="section__title">About Me</h2>
+      <div class="about__grid">
+        <div class="about__text">
+          <p>
+            I'm a passionate developer who loves creating clean, efficient, and scalable
+            software. I enjoy working across the full stack — from crafting pixel-perfect
+            UIs to architecting robust back-end systems.
+          </p>
+          <p>
+            When I'm not coding, you'll find me exploring new technologies, contributing
+            to open source, or diving deep into problem-solving challenges.
+          </p>
+          <div class="about__stats">
+            <div class="stat">
+              <span class="stat__number" data-count="50">0</span><span class="accent">+</span>
+              <span class="stat__label">Projects</span>
+            </div>
+            <div class="stat">
+              <span class="stat__number" data-count="3">0</span><span class="accent">+</span>
+              <span class="stat__label">Years Exp.</span>
+            </div>
+            <div class="stat">
+              <span class="stat__number" data-count="100">0</span><span class="accent">%</span>
+              <span class="stat__label">Dedicated</span>
+            </div>
+          </div>
+        </div>
+        <div class="about__card">
+          <div class="about__card-inner">
+            <div class="code-block">
+              <div class="code-block__header">
+                <span class="dot dot--red"></span>
+                <span class="dot dot--yellow"></span>
+                <span class="dot dot--green"></span>
+                <span class="code-block__filename">profile.json</span>
+              </div>
+              <pre><code>{
+  <span class="key">"name"</span>: <span class="string">"Md Jamil Islam"</span>,
+  <span class="key">"alias"</span>: <span class="string">"Joy"</span>,
+  <span class="key">"location"</span>: <span class="string">"Bangladesh"</span>,
+  <span class="key">"role"</span>: <span class="string">"Full Stack Developer"</span>,
+  <span class="key">"open_to"</span>: <span class="string">"opportunities"</span>,
+  <span class="key">"github"</span>: <span class="string">"Joy123123123"</span>
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="section section--alt" id="skills">
+    <div class="container">
+      <h2 class="section__title">Skills &amp; Technologies</h2>
+      <div class="skills__grid">
+        <div class="skill-card">
+          <div class="skill-card__icon">⚡</div>
+          <h3>Frontend</h3>
+          <ul>
+            <li>HTML5 &amp; CSS3</li>
+            <li>JavaScript (ES6+)</li>
+            <li>React / Vue</li>
+            <li>Responsive Design</li>
+          </ul>
+        </div>
+        <div class="skill-card">
+          <div class="skill-card__icon">🔧</div>
+          <h3>Backend</h3>
+          <ul>
+            <li>Node.js / Express</li>
+            <li>Python / Django</li>
+            <li>REST &amp; GraphQL APIs</li>
+            <li>Databases (SQL / NoSQL)</li>
+          </ul>
+        </div>
+        <div class="skill-card">
+          <div class="skill-card__icon">🚀</div>
+          <h3>DevOps &amp; Tools</h3>
+          <ul>
+            <li>Git &amp; GitHub</li>
+            <li>Docker</li>
+            <li>CI/CD Pipelines</li>
+            <li>Linux &amp; Bash</li>
+          </ul>
+        </div>
+        <div class="skill-card">
+          <div class="skill-card__icon">☁️</div>
+          <h3>Cloud &amp; Infra</h3>
+          <ul>
+            <li>AWS / GCP basics</li>
+            <li>GitHub Pages</li>
+            <li>Vercel / Netlify</li>
+            <li>DNS &amp; Domains</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="section" id="projects">
+    <div class="container">
+      <h2 class="section__title">Projects</h2>
+      <div class="projects__grid">
+        <article class="project-card">
+          <div class="project-card__header">
+            <span class="project-card__icon">🌐</span>
+            <div class="project-card__links">
+              <a href="https://github.com/Joy123123123" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.37.6.1.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.54-1.38-1.32-1.75-1.32-1.75-1.08-.74.08-.73.08-.73 1.2.08 1.83 1.23 1.83 1.23 1.06 1.82 2.78 1.3 3.46.99.1-.77.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              </a>
+            </div>
+          </div>
+          <h3 class="project-card__title">Personal Website</h3>
+          <p class="project-card__desc">
+            This very site — a fast, responsive GitHub Pages portfolio built with vanilla HTML, CSS, and JavaScript. Hosted on a custom domain via CNAME.
+          </p>
+          <div class="project-card__tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">GitHub Pages</span>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-card__header">
+            <span class="project-card__icon">💻</span>
+            <div class="project-card__links">
+              <a href="https://github.com/Joy123123123" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.37.6.1.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.54-1.38-1.32-1.75-1.32-1.75-1.08-.74.08-.73.08-.73 1.2.08 1.83 1.23 1.83 1.23 1.06 1.82 2.78 1.3 3.46.99.1-.77.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              </a>
+            </div>
+          </div>
+          <h3 class="project-card__title">Open Source Contributions</h3>
+          <p class="project-card__desc">
+            Active contributor to various open source projects. Passionate about building tools that help the developer community.
+          </p>
+          <div class="project-card__tags">
+            <span class="tag">Open Source</span>
+            <span class="tag">GitHub</span>
+          </div>
+        </article>
+
+        <article class="project-card project-card--cta">
+          <div class="project-card__more">
+            <span>More on GitHub</span>
+            <a href="https://github.com/Joy123123123" target="_blank" rel="noopener noreferrer" class="btn btn--outline btn--sm">
+              View All →
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section section--alt" id="contact">
+    <div class="container contact__inner">
+      <h2 class="section__title">Get In Touch</h2>
+      <p class="contact__subtitle">
+        Have a project in mind, or just want to say hi? My inbox is always open.
+      </p>
+      <div class="contact__links">
+        <a href="https://github.com/Joy123123123" target="_blank" rel="noopener noreferrer" class="contact__link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.37.6.1.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.54-1.38-1.32-1.75-1.32-1.75-1.08-.74.08-.73.08-.73 1.2.08 1.83 1.23 1.83 1.23 1.06 1.82 2.78 1.3 3.46.99.1-.77.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02 0 2.04.13 3 .4 2.28-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.69.83.57C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+      <a href="mailto:joy@amznon.me" class="btn btn--primary btn--lg">Say Hello ✉️</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span>Built with ❤️ by <strong>Md Jamil Islam</strong></span>
+      <span>© <span id="year"></span> amznon.me</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
