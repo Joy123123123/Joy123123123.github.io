@@ -883,7 +883,7 @@ body {
 }
 
 .joyai-chat__reset {
-  margin-left: auto;
+  margin-left: .25rem;
   background: none;
   border: none;
   color: var(--txt-3);
@@ -892,6 +892,7 @@ body {
   padding: .2rem .4rem;
   border-radius: 4px;
   transition: color var(--transition), background var(--transition);
+  flex-shrink: 0;
 }
 
 .joyai-chat__reset:hover {
@@ -1030,4 +1031,171 @@ body {
   .joyai-setup { padding: 1.25rem 1rem; }
   .joyai-messages { padding: .75rem; }
   .joyai-input-bar { padding: .65rem .75rem; }
+}
+
+/* ── JoyAI v4 additions ─────────────────────────────── */
+
+/* Ollama "Own AI" provider button highlight */
+.joyai-prov-btn--own {
+  border-color: rgba(152,195,121,.3);
+}
+.joyai-prov-btn--own:hover,
+.joyai-prov-btn--own.selected {
+  border-color: rgba(152,195,121,.7);
+  background: rgba(152,195,121,.06);
+}
+.joyai-prov-btn__tag--own {
+  background: rgba(152,195,121,.15);
+  color: #98c379;
+  border-color: rgba(152,195,121,.35);
+}
+
+/* Mode toggle in chat header */
+.joyai-mode-toggle {
+  display: flex;
+  gap: .25rem;
+  margin-left: .5rem;
+  flex: 1;
+}
+.joyai-mode-btn {
+  font-size: .7rem;
+  padding: .2rem .65rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-2);
+  background: none;
+  color: var(--txt-3);
+  cursor: pointer;
+  transition: all var(--transition);
+  font-weight: 500;
+  font-family: var(--font-sans);
+  white-space: nowrap;
+}
+.joyai-mode-btn.active {
+  background: rgba(204,120,92,.15);
+  border-color: rgba(204,120,92,.5);
+  color: var(--orange);
+}
+
+/* Advanced coding split pane */
+.joyai-advanced {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+.joyai-adv-chat {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  border-right: 1px solid var(--border-1);
+}
+.joyai-adv-chat .joyai-messages {
+  display: flex !important;
+  flex: 1;
+}
+.joyai-code-pane {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-2);
+}
+.joyai-code-pane__header {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .35rem .75rem;
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--border-1);
+  flex-shrink: 0;
+}
+.joyai-code-pane__title {
+  font-size: .75rem;
+  font-family: var(--font-mono);
+  color: var(--txt-3);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.joyai-lang-sel {
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
+  border-radius: 4px;
+  color: var(--txt-3);
+  font-size: .7rem;
+  padding: .1rem .4rem;
+  outline: none;
+  cursor: pointer;
+}
+.joyai-copy-btn {
+  font-size: .7rem;
+  background: none;
+  border: 1px solid var(--border-2);
+  color: var(--txt-3);
+  padding: .1rem .55rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font-sans);
+}
+.joyai-copy-btn:hover { color: var(--green); border-color: rgba(152,195,121,.4); }
+.joyai-code-body {
+  flex: 1;
+  overflow: auto;
+  padding: .85rem;
+  font-family: var(--font-mono);
+  font-size: .78rem;
+  line-height: 1.7;
+  color: var(--txt-1);
+  white-space: pre;
+  outline: none;
+  tab-size: 2;
+  counter-reset: line;
+}
+.joyai-line-num {
+  display: inline-block;
+  min-width: 2rem;
+  text-align: right;
+  margin-right: 1rem;
+  color: var(--txt-3);
+  user-select: none;
+  font-size: .72rem;
+}
+
+/* Setup contact row */
+.joyai-setup__contact {
+  display: flex;
+  gap: .85rem;
+  align-items: center;
+  margin-top: .25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.joyai-contact-link {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  font-size: .73rem;
+  color: var(--txt-3);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+.joyai-contact-link svg { width: 12px; height: 12px; flex-shrink: 0; }
+.joyai-contact-link:hover { color: var(--blue); }
+
+/* Featured project item */
+.project-item--featured {
+  border-color: rgba(204,120,92,.3);
+  background: rgba(204,120,92,.04);
+}
+.project-item--featured:hover { border-color: rgba(204,120,92,.6); }
+
+/* Advanced mode responsive */
+@media (max-width: 640px) {
+  .joyai-advanced { flex-direction: column; }
+  .joyai-adv-chat { border-right: none; border-bottom: 1px solid var(--border-1); max-height: 45%; }
+  .joyai-code-pane { max-height: 55%; }
 }

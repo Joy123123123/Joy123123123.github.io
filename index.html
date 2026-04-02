@@ -239,14 +239,14 @@
 
           <div class="project-list">
 
-            <a class="project-item" href="https://github.com/Joy123123123" target="_blank" rel="noopener noreferrer">
+            <a class="project-item project-item--featured" href="#" onclick="switchPanel('joyai');closeSidebar();return false;">
               <div class="project-item__left">
-                <div class="project-item__icon">🌐</div>
+                <div class="project-item__icon">🇧🇩</div>
                 <div>
-                  <div class="project-item__name">amznon.me</div>
-                  <div class="project-item__desc">This site — zero-dependency GitHub Pages portfolio with Claude Code-inspired UI.</div>
+                  <div class="project-item__name">JoyAI — Bangladeshi Intelligent AI <span class="tag tag--sm" style="background:rgba(204,120,92,.12);color:#CC785C;border-color:rgba(204,120,92,.4)">v4</span></div>
+                  <div class="project-item__desc">World-class AI assistant built in Bangladesh. Two modes: Regular AI + Advanced Coding IDE. Supports local Ollama (own AI, unlimited), Groq, Gemini. Terminal + Browser.</div>
                   <div class="project-item__tags">
-                    <span class="tag tag--sm">HTML</span><span class="tag tag--sm">CSS</span><span class="tag tag--sm">JS</span><span class="tag tag--sm">GitHub Pages</span>
+                    <span class="tag tag--sm">Bangladesh 🇧🇩</span><span class="tag tag--sm">Ollama</span><span class="tag tag--sm">Node.js</span><span class="tag tag--sm">AI</span><span class="tag tag--sm">Free</span>
                   </div>
                 </div>
               </div>
@@ -255,12 +255,12 @@
 
             <a class="project-item" href="https://github.com/Joy123123123" target="_blank" rel="noopener noreferrer">
               <div class="project-item__left">
-                <div class="project-item__icon">💻</div>
+                <div class="project-item__icon">🌐</div>
                 <div>
-                  <div class="project-item__name">Open Source Work</div>
-                  <div class="project-item__desc">Contributions to various open source repositories on GitHub.</div>
+                  <div class="project-item__name">amznon.me</div>
+                  <div class="project-item__desc">This site — zero-dependency GitHub Pages portfolio with Claude Code-inspired UI.</div>
                   <div class="project-item__tags">
-                    <span class="tag tag--sm">Open Source</span><span class="tag tag--sm">GitHub</span>
+                    <span class="tag tag--sm">HTML</span><span class="tag tag--sm">CSS</span><span class="tag tag--sm">JS</span><span class="tag tag--sm">GitHub Pages</span>
                   </div>
                 </div>
               </div>
@@ -288,13 +288,23 @@
           </div>
 
           <div class="contact-list">
-            <a class="contact-row" href="mailto:joy@amznon.me">
+            <a class="contact-row" href="mailto:joyaiofficialbd@gmail.com">
               <span class="contact-row__icon">
                 <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 7l8 5 8-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
               </span>
               <div>
-                <div class="contact-row__label">Email</div>
-                <div class="contact-row__value">joy@amznon.me</div>
+                <div class="contact-row__label">Email — JoyAI Official</div>
+                <div class="contact-row__value">joyaiofficialbd@gmail.com</div>
+              </div>
+              <svg class="contact-row__arrow" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8h10M9 5l4 3-4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a class="contact-row" href="https://www.facebook.com/share/18Q6mnNeAr/" target="_blank" rel="noopener noreferrer">
+              <span class="contact-row__icon">
+                <svg viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M18 0H2a2 2 0 00-2 2v16a2 2 0 002 2h7v-7H7v-3h2V7.5A3.5 3.5 0 0112.5 4H15v3h-1.5a1 1 0 00-1 1v2H15l-.5 3H12.5V20H18a2 2 0 002-2V2a2 2 0 00-2-2z"/></svg>
+              </span>
+              <div>
+                <div class="contact-row__label">Facebook — JoyAI Bangladesh</div>
+                <div class="contact-row__value">JoyAI Official Page</div>
               </div>
               <svg class="contact-row__arrow" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8h10M9 5l4 3-4 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
@@ -331,22 +341,30 @@
       <section class="panel" id="panel-joyai">
         <div class="joyai-wrap">
 
-          <!-- Setup screen (shown if no key saved) -->
+          <!-- Setup screen -->
           <div class="joyai-setup" id="joyai-setup">
             <div class="joyai-setup__logo">
               <span class="joyai-logo">Joy<span>AI</span></span>
               <div class="joyai-setup__flag">🇧🇩</div>
             </div>
             <h2 class="joyai-setup__title">Bangladeshi Intelligent AI</h2>
-            <p class="joyai-setup__sub">একটা free AI provider বেছে নাও। কোনো credit card লাগবে না।</p>
+            <p class="joyai-setup__sub">AI engine বেছে নাও। <strong>Ollama = নিজস্ব AI</strong> — unlimited, offline।</p>
 
             <div class="joyai-prov-list" id="joyai-prov-list">
+              <button class="joyai-prov-btn joyai-prov-btn--own" data-prov="ollama">
+                <div class="joyai-prov-btn__top">
+                  <span class="joyai-prov-btn__name">🏠 Local Ollama</span>
+                  <span class="joyai-prov-btn__tag joyai-prov-btn__tag--own">OWN AI</span>
+                </div>
+                <div class="joyai-prov-btn__desc">Runs on your machine — no API key needed</div>
+                <div class="joyai-prov-btn__free">✓ Unlimited · Offline · Your own data</div>
+              </button>
               <button class="joyai-prov-btn" data-prov="groq">
                 <div class="joyai-prov-btn__top">
                   <span class="joyai-prov-btn__name">⚡ Groq</span>
-                  <span class="joyai-prov-btn__tag">Recommended</span>
+                  <span class="joyai-prov-btn__tag">Cloud Free</span>
                 </div>
-                <div class="joyai-prov-btn__desc">llama-3.3-70b-versatile · fastest</div>
+                <div class="joyai-prov-btn__desc">llama-3.3-70b · fastest cloud option</div>
                 <div class="joyai-prov-btn__free">★ দিনে 14,400 request FREE</div>
               </button>
               <button class="joyai-prov-btn" data-prov="gemini">
@@ -354,7 +372,7 @@
                   <span class="joyai-prov-btn__name">✦ Gemini</span>
                   <span class="joyai-prov-btn__tag">Google</span>
                 </div>
-                <div class="joyai-prov-btn__desc">gemini-1.5-flash · smart</div>
+                <div class="joyai-prov-btn__desc">gemini-2.0-flash · smart + capable</div>
                 <div class="joyai-prov-btn__free">★ দিনে 1,500 request FREE</div>
               </button>
             </div>
@@ -365,16 +383,61 @@
               <button class="joyai-key-form__btn" id="joyai-key-save">শুরু করো →</button>
               <div class="joyai-key-form__link" id="joyai-key-link"></div>
             </div>
+
+            <!-- Contact row in setup -->
+            <div class="joyai-setup__contact">
+              <a href="mailto:joyaiofficialbd@gmail.com" class="joyai-contact-link">
+                <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 5l7 5 7-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                joyaiofficialbd@gmail.com
+              </a>
+              <a href="https://www.facebook.com/share/18Q6mnNeAr/" target="_blank" rel="noopener" class="joyai-contact-link">
+                <svg viewBox="0 0 16 16" fill="currentColor"><path d="M13 0H3a3 3 0 00-3 3v10a3 3 0 003 3h4.5v-5.5h-2v-2h2V7a2.5 2.5 0 012.5-2.5h2v2h-1.5c-.28 0-.5.22-.5.5v1.5h2l-.5 2H10V16H13a3 3 0 003-3V3a3 3 0 00-3-3z"/></svg>
+                Facebook
+              </a>
+            </div>
           </div>
 
-          <!-- Chat screen -->
+          <!-- Chat area (regular mode) -->
           <div class="joyai-chat" id="joyai-chat">
             <div class="joyai-chat__header">
               <span class="joyai-logo joyai-logo--sm">Joy<span>AI</span></span>
               <span class="joyai-chat__header-sub" id="joyai-prov-label"></span>
-              <button class="joyai-chat__reset" id="joyai-reset" title="Change provider">⚙</button>
+              <div class="joyai-mode-toggle" id="joyai-mode-toggle">
+                <button class="joyai-mode-btn active" id="joyai-mode-regular" data-mode="regular">💬 Regular</button>
+                <button class="joyai-mode-btn" id="joyai-mode-advanced" data-mode="advanced">💻 Coding</button>
+              </div>
+              <button class="joyai-chat__reset" id="joyai-reset" title="Change AI engine">⚙</button>
             </div>
+
+            <!-- Regular mode messages -->
             <div class="joyai-messages" id="joyai-messages"></div>
+
+            <!-- Advanced coding mode: split pane -->
+            <div class="joyai-advanced" id="joyai-advanced">
+              <div class="joyai-adv-chat">
+                <div class="joyai-messages" id="joyai-adv-messages"></div>
+              </div>
+              <div class="joyai-code-pane" id="joyai-code-pane">
+                <div class="joyai-code-pane__header">
+                  <span class="joyai-code-pane__title" id="joyai-code-title">// code output</span>
+                  <select class="joyai-lang-sel" id="joyai-lang-sel">
+                    <option value="javascript">javascript</option>
+                    <option value="python">python</option>
+                    <option value="typescript">typescript</option>
+                    <option value="html">html</option>
+                    <option value="css">css</option>
+                    <option value="bash">bash</option>
+                    <option value="java">java</option>
+                    <option value="go">go</option>
+                    <option value="rust">rust</option>
+                    <option value="c">c</option>
+                  </select>
+                  <button class="joyai-copy-btn" id="joyai-copy-btn">Copy</button>
+                </div>
+                <div class="joyai-code-body" id="joyai-code-body" contenteditable="true" spellcheck="false"></div>
+              </div>
+            </div>
+
             <div class="joyai-input-bar">
               <textarea class="joyai-textarea" id="joyai-inp" rows="1" placeholder="Bangla বা English-এ জিজ্ঞেস করো…"></textarea>
               <button class="joyai-send-btn" id="joyai-send">
