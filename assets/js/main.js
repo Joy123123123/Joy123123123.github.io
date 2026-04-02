@@ -11,7 +11,9 @@ function switchPanel(id) {
   panels.forEach(p   => p.classList.toggle('active', p.id === `panel-${id}`));
   navItems.forEach(n => n.classList.toggle('active', n.dataset.panel === id));
   if (panelTitle) {
-    panelTitle.textContent = id === 'joyai' ? 'JoyAI 🇧🇩' : id.charAt(0).toUpperCase() + id.slice(1);
+    panelTitle.textContent = id === 'joyai' ? 'JoyAI 🇧🇩' :
+                             id === 'about' ? 'Developer Info' :
+                             id.charAt(0).toUpperCase() + id.slice(1);
   }
   if (id === 'about') startCounters();
 }
