@@ -801,6 +801,7 @@ async function joyaiSendMsg() {
     });
 
     hist.push({ role: 'assistant', content: finalText });
+    joyaiSaveHistory();  // auto-save after every reply
 
   } catch (err) {
     aiEl.classList.remove('joyai-msg--loading');
@@ -833,7 +834,43 @@ joyaiInp && joyaiInp.addEventListener('keydown', e => {
   }, 0);
 });
 
-// ── Reset / Change AI ─────────────────────────────────
+// ── Chat history persistence (auto-save) ─────────────
+const HIST_KEY     = 'joyai_hist_v5';
+const HIST_ADV_KEY = 'joyai_hist_adv_v5';
+
+function joyaiSaveHistory() {
+  try {
+    localStorage.setItem(HIST_KEY,     JSON.stringify(joyaiHist.slice(-30)));
+    localStorage.setItem(HIST_ADV_KEY, JSON.stringify(joyaiAdvHist.slice(-30)));
+  } catch {}
+}
+
+function joyaiLoadHistory() {
+  try {
+    const h  = localStorage.getItem(HIST_KEY);
+    const ha = localStorage.getItem(HIST_ADV_KEY);
+    if (h)  joyaiHist    = JSON.parse(h);
+    if (ha) joyaiAdvHist = JSON.parse(ha);
+  } catch {}
+}
+
+// Render saved history messages into the chat
+function joyaiRestoreMessages() {
+  if (!joyaiMessages || !joyaiHist.length) return;
+  // Remove welcome screen if present
+  const welcome = joyaiMessages.querySelector('.joyai-welcome');
+  if (welcome) welcome.remove();
+  joyaiHist.forEach(m => {
+    if (m.role === 'user') {
+      joyaiAddMsg('user', m.content, joyaiMessages);
+    } else if (m.role === 'assistant') {
+      joyaiAddMsg('ai', joyaiMarkdown(m.content), joyaiMessages);
+    }
+  });
+  joyaiMessages.scrollTop = joyaiMessages.scrollHeight;
+}
+
+
 joyaiReset && joyaiReset.addEventListener('click', () => {
   if (joyaiChat)  joyaiChat.classList.remove('active');
   if (joyaiSetup) joyaiSetup.style.display = '';
@@ -846,6 +883,7 @@ joyaiReset && joyaiReset.addEventListener('click', () => {
 joyaiNewChat && joyaiNewChat.addEventListener('click', () => {
   joyaiHist    = [];
   joyaiAdvHist = [];
+  joyaiSaveHistory();  // clear saved history
   if (joyaiMessages)   { joyaiMessages.innerHTML = '';    joyaiShowWelcome(joyaiMessages); }
   if (joyaiAdvMessages){ joyaiAdvMessages.innerHTML = ''; }
   if (joyaiCodeBody)   { joyaiCodeBody.innerHTML = '';    joyaiCurCode = ''; }
@@ -866,5 +904,11 @@ joyaiNewChat && joyaiNewChat.addEventListener('click', () => {
     localStorage.setItem('joyai_prov', 'pollinations');
     localStorage.setItem('joyai_key',  'free');
   }
+  // Load saved chat history before starting
+  joyaiLoadHistory();
   joyaiStartChat(true);
+  // Restore saved messages if any
+  if (joyaiHist.length) {
+    joyaiRestoreMessages();
+  }
 })();
